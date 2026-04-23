@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>冯先生 & 熊女士｜婚礼答谢宴邀请函</title>
+  <meta name="description" content="冯先生与熊女士婚礼答谢宴邀请函，诚挚邀请您出席我们的甜美 Lolita 风答谢宴。" />
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --bg-soft: #fffdfd;
+      --card: rgba(255,255,255,0.78);
+      --text: #6f4d5e;
+      --text-soft: #8f6b7b;
+      --pink: #f9d7e5;
+      --pink-mid: #f3b6cb;
+      --pink-deep: #db88aa;
+      --pink-strong: #c96f95;
+      --gold: #ebccb0;
+      --gold-deep: #d9b08f;
+      --line: rgba(217, 135, 167, 0.18);
+      --white-line: rgba(255,255,255,0.78);
+      --shadow: 0 24px 70px rgba(209, 132, 167, 0.18);
+      --shadow-soft: 0 10px 35px rgba(217,135,167,0.10);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 214, 231, 0.58), transparent 24%),
+        radial-gradient(circle at 100% 0%, rgba(255, 231, 241, 0.62), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(255, 237, 245, 0.85), transparent 34%),
+        linear-gradient(180deg, #fffafd 0%, #fff3f9 50%, #fff9fc 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px),
+        radial-gradient(rgba(255,214,231,0.45) 1px, transparent 1px);
+      background-size: 22px 22px, 38px 38px;
+      background-position: 0 0, 12px 8px;
+      opacity: 0.25;
+      z-index: 0;
+    }
+
+    a { color: inherit; }
+
+    .page-shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    .floating-charm {
+      position: fixed;
+      top: 16px;
+      width: 92px;
+      height: 140px;
+      pointer-events: none;
+      opacity: 0.65;
+      z-index: 15;
+    }
+
+    .floating-charm.left { left: 10px; }
+    .floating-charm.right { right: 10px; transform: scaleX(-1); }
+
+    .floating-charm::before,
+    .floating-charm::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .floating-charm::before {
+      top: 0;
+      width: 2px;
+      height: 82px;
+      background: linear-gradient(180deg, rgba(235,204,176,0), rgba(235,204,176,0.9));
+    }
+
+    .floating-charm::after {
+      top: 74px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 35%, #fff, #ffd6e5 55%, #f3b6cb 100%);
+      box-shadow: 0 8px 20px rgba(217,135,167,0.16);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      padding: 14px 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(255,250,252,0.90), rgba(255,250,252,0.68));
+      border-bottom: 1px solid rgba(255,255,255,0.76);
+    }
+
+    .topbar-inner {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255,255,255,0.46);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 999px;
+      padding: 10px 14px;
+      box-shadow: 0 8px 26px rgba(217,135,167,0.08);
+    }
+
+    .brand {
+      font-size: 14px;
+      letter-spacing: 0.14em;
+      color: var(--pink-strong);
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav a {
+      text-decoration: none;
+      font-size: 13px;
+      color: var(--text-soft);
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+
+    .nav a:hover {
+      background: rgba(243,182,203,0.18);
+      color: var(--pink-strong);
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      min-height: calc(100vh - 74px);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 34px 18px 42px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("./assets/invitation.png") center 18% / cover no-repeat;
+      transform: scale(1.08);
+      filter: brightness(0.82) saturate(1.05);
+      z-index: -3;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,249,252,0.30), rgba(255,247,250,0.82) 58%, rgba(255,248,251,0.95) 100%),
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.18), transparent 36%);
+      backdrop-filter: blur(5px);
+      z-index: -2;
+    }
+
+    .hero-ornament {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 62%);
+      filter: blur(6px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero-ornament.left { left: -30px; bottom: 50px; }
+    .hero-ornament.right { right: -10px; top: 90px; }
+
+    .hero-card {
+      width: min(860px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.84), rgba(255,247,250,0.76));
+      border: 1px solid rgba(255,255,255,0.76);
+      box-shadow: var(--shadow);
+      border-radius: 36px;
+      padding: 54px 38px 42px;
+      text-align: center;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before,
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(243,182,203,0.24), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-card::before { left: -40px; top: -40px; }
+    .hero-card::after { right: -40px; bottom: -40px; }
+
+    .lace {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 30px;
+      opacity: 0.9;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 15px 0, rgba(255,255,255,0.96) 14px, transparent 15px) repeat-x;
+      background-size: 30px 30px;
+      z-index: 3;
+    }
+
+    .lace.top { top: 0; }
+    .lace.bottom { bottom: 0; transform: rotate(180deg); }
+
+    .mini-bow {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 42px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .mini-bow::before,
+    .mini-bow::after,
+    .mini-bow span {
+      content: "";
+      position: absolute;
+      top: 8px;
+      width: 28px;
+      height: 22px;
+      background: linear-gradient(180deg, #ffd7e6, #f3b6cb);
+      border-radius: 20px 20px 20px 6px;
+      box-shadow: 0 8px 18px rgba(217,135,167,0.14);
+    }
+
+    .mini-bow::before { left: 2px; transform: rotate(12deg); }
+    .mini-bow::after { right: 2px; transform: scaleX(-1) rotate(12deg); }
+    .mini-bow span {
+      left: 50%;
+      top: 10px;
+      width: 14px;
+      height: 18px;
+      transform: translateX(-50%);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #f7c5d8, #eaa8c4);
+    }
+
+    .ribbon-corner {
+      position: absolute;
+      top: 16px;
+      width: 92px;
+      height: 92px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .ribbon-corner::before,
+    .ribbon-corner::after {
+      content: "";
+      position: absolute;
+      background: linear-gradient(180deg, #f8cade, #efadc7);
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(217,135,167,0.18);
+    }
+
+    .ribbon-corner::before {
+      width: 70px;
+      height: 24px;
+      left: 10px;
+      top: 26px;
+      transform: rotate(38deg);
+    }
+
+    .ribbon-corner::after {
+      width: 70px;
+      height: 24px;
+      left: 10px;
+      top: 26px;
+      transform: rotate(-38deg);
+    }
+
+    .ribbon-left { left: 12px; }
+    .ribbon-right { right: 12px; transform: scaleX(-1); }
+
+    .eyebrow {
+      letter-spacing: 0.30em;
+      font-size: 12px;
+      color: var(--pink-deep);
+      margin: 8px 0 18px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 5;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 7vw, 68px);
+      line-height: 1.12;
+      font-weight: 500;
+      color: var(--pink-strong);
+      text-shadow: 0 2px 10px rgba(255,255,255,0.55);
+      position: relative;
+      z-index: 5;
+    }
+
+    .hero-kicker {
+      margin-top: 8px;
+      font-size: 16px;
+      color: var(--pink-deep);
+      letter-spacing: 0.08em;
+      position: relative;
+      z-index: 5;
+    }
+
+    .divider {
+      width: 136px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--pink-deep), transparent);
+      margin: 24px auto;
+      position: relative;
+      z-index: 5;
+    }
+
+    .divider::after {
+      content: "🎀";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -54%);
+      font-size: 16px;
+      background: rgba(255,249,252,0.92);
+      padding: 0 8px;
+    }
+
+    .subtitle {
+      margin: 18px auto 0;
+      font-size: 18px;
+      line-height: 1.95;
+      max-width: 620px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .couple-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 28px;
+      padding: 14px 24px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(255,255,255,0.76);
+      box-shadow: 0 8px 24px rgba(217,135,167,0.08);
+      position: relative;
+      z-index: 5;
+    }
+
+    .couple {
+      font-size: clamp(22px, 4vw, 34px);
+      letter-spacing: 0.08em;
+    }
+
+    .heart-dot {
+      color: var(--pink-deep);
+      font-size: 20px;
+      transform: translateY(-1px);
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .meta-pill {
+      padding: 14px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.60);
+      border: 1px solid rgba(255,255,255,0.75);
+      box-shadow: var(--shadow-soft);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .meta-pill strong {
+      display: block;
+      color: var(--pink-strong);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-size: 15px;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--pink-deep) 0%, #f3b6cb 100%);
+      color: white;
+      box-shadow: 0 10px 30px rgba(217, 135, 167, 0.28);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.76);
+      color: var(--pink-strong);
+      border: 1px solid rgba(217, 135, 167, 0.26);
+    }
+
+    .btn-ghost {
+      background: rgba(255,247,251,0.72);
+      color: var(--text-soft);
+      border: 1px dashed rgba(217, 135, 167, 0.30);
+    }
+
+    .section {
+      padding: 84px 18px;
+      position: relative;
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: min(1120px, calc(100% - 36px));
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(217,135,167,0.20), transparent);
+    }
+
+    .container {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      text-align: center;
+      color: var(--pink-deep);
+      letter-spacing: 0.24em;
+      font-size: 12px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(28px, 4vw, 42px);
+      color: var(--pink-strong);
+      margin: 0 0 12px;
+      font-weight: 500;
+    }
+
+    .section-desc {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 42px;
+      line-height: 1.95;
+      font-size: 16px;
+      color: var(--text-soft);
+    }
+
+    .story-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,248,251,0.82));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      padding: 34px 26px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .story-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, #fbe4ee, #f3b6cb, #fbe4ee);
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .story-copy h3,
+    .poster-copy h3 {
+      margin: 0 0 12px;
+      color: var(--pink-strong);
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    .story-copy p,
+    .poster-copy p {
+      margin: 0;
+      line-height: 1.95;
+      color: var(--text-soft);
+      font-size: 16px;
+    }
+
+    .story-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .badge {
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(217,135,167,0.20);
+      font-size: 13px;
+      color: var(--pink-strong);
+    }
+
+    .story-visual {
+      position: relative;
+      min-height: 300px;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 12px 32px rgba(217,135,167,0.10);
+      background:
+        linear-gradient(180deg, rgba(255,246,250,0.72), rgba(255,239,246,0.88)),
+        url("./assets/invitation.png") center/cover no-repeat;
+    }
+
+    .story-visual::before,
+    .story-visual::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.54), transparent 70%);
+      pointer-events: none;
+    }
+
+    .story-visual::before { width: 180px; height: 180px; top: -40px; right: -10px; }
+    .story-visual::after { width: 140px; height: 140px; bottom: -20px; left: -20px; }
+
+    .story-quote {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      padding: 18px 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.74);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: var(--shadow-soft);
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-soft);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .info-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,247,250,0.87));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 28px 20px 24px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .info-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, #f8d3e1, #f3b6cb, #f8d3e1);
+      opacity: 0.85;
+    }
+
+    .info-icon {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,236,244,0.85));
+      color: var(--pink-strong);
+      box-shadow: 0 8px 22px rgba(217,135,167,0.10);
+      font-size: 24px;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: var(--pink-deep);
+      letter-spacing: 0.16em;
+      margin-bottom: 14px;
+    }
+
+    .info-main {
+      font-size: 22px;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: var(--pink-strong);
+    }
+
+    .info-sub {
+      line-height: 1.9;
+      font-size: 15px;
+      color: var(--text-soft);
+    }
+
+    .dress-section .poster-layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .poster-copy {
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,247,250,0.84));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      padding: 30px 26px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .poster-points {
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .poster-points li {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(217,135,167,0.18);
+      color: var(--text-soft);
+    }
+
+    .gallery-box {
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,245,249,0.86));
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: 18px;
+      box-shadow: 0 16px 40px rgba(217,135,167,0.10);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,0.14), transparent 26%);
+    }
+
+    .gallery-box img {
+      width: 100%;
+      display: block;
+      border-radius: 22px;
+      object-fit: cover;
+      box-shadow: 0 10px 30px rgba(217,135,167,0.12);
+    }
+
+    .cta-box {
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,244,249,0.88));
+      border: 1px solid var(--line);
+      border-radius: 36px;
+      padding: 36px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before,
+    .cta-box::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(243,182,203,0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .cta-box::before { left: -40px; top: -80px; }
+    .cta-box::after { right: -40px; bottom: -90px; }
+
+    .cta-title {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 46px);
+      color: var(--pink-strong);
+      font-weight: 500;
+    }
+
+    .cta-sub {
+      margin: 16px auto 0;
+      max-width: 760px;
+      line-height: 1.95;
+      color: var(--text-soft);
+      font-size: 16px;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .wechat-tip {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #b28399;
+    }
+
+    .footer {
+      padding: 28px 20px 70px;
+      text-align: center;
+      color: #a5798f;
+      font-size: 14px;
+    }
+
+    .footer-line {
+      width: 140px;
+      height: 1px;
+      margin: 0 auto 16px;
+      background: linear-gradient(90deg, transparent, rgba(217,135,167,0.32), transparent);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .floating-petal {
+      position: fixed;
+      top: -40px;
+      width: 18px;
+      height: 18px;
+      border-radius: 70% 30% 70% 30%;
+      background: radial-gradient(circle at 30% 30%, #fff7fa 0%, #ffd7e6 55%, #f3b6cb 100%);
+      opacity: .55;
+      pointer-events: none;
+      z-index: 20;
+      animation: fall linear forwards;
+      filter: blur(.2px);
+    }
+
+    @keyframes fall {
+      0% { transform: translate3d(0, -40px, 0) rotate(0deg); }
+      100% { transform: translate3d(var(--drift), 110vh, 0) rotate(360deg); }
+    }
+
+    @media (max-width: 980px) {
+      .story-grid,
+      .dress-section .poster-layout,
+      .info-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .story-grid { grid-template-columns: 1fr; }
+      .dress-section .poster-layout { grid-template-columns: 1fr; }
+      .hero-meta { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .floating-charm { display: none; }
+      .topbar { padding: 10px 10px; }
+      .topbar-inner {
+        border-radius: 24px;
+        padding: 12px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .brand { text-align: center; }
+      .nav {
+        justify-content: center;
+        gap: 4px;
+      }
+      .nav a {
+        font-size: 12px;
+        padding: 7px 10px;
+      }
+      .hero {
+        min-height: auto;
+        padding: 18px 12px 28px;
+      }
+      .hero::before {
+        background-position: center top;
+      }
+      .hero-card {
+        padding: 48px 18px 28px;
+        border-radius: 26px;
+      }
+      .subtitle {
+        font-size: 15px;
+        line-height: 1.85;
+      }
+      .couple-wrap {
+        width: 100%;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 14px;
+      }
+      .couple {
+        font-size: 24px;
+      }
+      .hero-meta,
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .section {
+        padding: 58px 12px;
+      }
+      .section-desc {
+        font-size: 15px;
+        margin-bottom: 30px;
+      }
+      .story-card,
+      .poster-copy,
+      .cta-box {
+        padding: 24px 16px;
+        border-radius: 24px;
+      }
+      .story-copy h3,
+      .poster-copy h3 {
+        font-size: 24px;
+      }
+      .story-visual {
+        min-height: 250px;
+      }
+      .gallery-box {
+        padding: 12px;
+        border-radius: 22px;
+      }
+      .gallery-box img {
+        border-radius: 16px;
+      }
+      .actions,
+      .cta-actions {
+        gap: 10px;
+      }
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+      .mini-bow,
+      .ribbon-corner {
+        transform: scale(0.82);
+      }
+      .ribbon-right { transform: scaleX(-1) scale(0.82); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="floating-charm left"></div>
+    <div class="floating-charm right"></div>
+
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">Sweet Lolita Wedding</div>
+        <nav class="nav">
+          <a href="#hero">首页</a>
+          <a href="#story">答谢信息</a>
+          <a href="#details">宴会安排</a>
+          <a href="#poster">邀请函海报</a>
+          <a href="#rsvp">温馨提示</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="hero">
+      <div class="hero-ornament left"></div>
+      <div class="hero-ornament right"></div>
+      <div class="lace top"></div>
+      <div class="lace bottom"></div>
+      <div class="ribbon-corner ribbon-left"></div>
+      <div class="ribbon-corner ribbon-right"></div>
+      <div class="hero-card reveal show">
+        <div class="mini-bow"><span></span></div>
+        <div class="eyebrow">Sweet Lolita Wedding Thank You Party</div>
+        <h1>婚礼答谢宴邀请函</h1>
+        <div class="hero-kicker">粉白梦幻 · 甜美赴约 · 温柔见证</div>
+        <div class="divider"></div>
+        <p class="subtitle">
+          一路走来，感谢有您见证我们的幸福时刻。<br />
+          诚挚邀请您出席我们的婚礼答谢宴，和我们一起分享这份甜蜜、温柔、梦幻的喜悦。
+        </p>
+        <div class="couple-wrap">
+          <div class="couple">冯先生</div>
+          <div class="heart-dot">❤</div>
+          <div class="couple">熊女士</div>
+        </div>
+
+        <div class="hero-meta">
+          <div class="meta-pill"><strong>时间</strong>2026年6月15日<br />18:00 签到 · 18:30 开席</div>
+          <div class="meta-pill"><strong>地点</strong>幸福大酒店 3楼宴会厅<br />XX市XX区XX路88号</div>
+          <div class="meta-pill"><strong>主题</strong>婚礼答谢宴<br />Lolita甜美风邀请页</div>
+        </div>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="#details">查看宴会信息</a>
+          <a class="btn btn-secondary" href="#poster">查看邀请函海报</a>
+          <a class="btn btn-ghost" href="#rsvp">微信预览建议</a>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <section class="section" id="story">
+        <div class="container">
+          <div class="section-tag reveal">Invitation Story</div>
+          <h2 class="section-title reveal">一封更有仪式感的答谢邀请</h2>
+          <p class="section-desc reveal">
+            这一页不是普通通知，而是我们专门准备的一张线上邀请函。
+            我们把粉色、蕾丝、蝴蝶结和梦幻的 Lolita 元素放进来，希望你点开链接的那一刻，就能感受到这份认真与甜意。
+          </p>
+
+          <div class="story-card reveal">
+            <div class="story-grid">
+              <div class="story-copy">
+                <h3>答谢，不只是吃一顿饭</h3>
+                <p>
+                  它更像是一场温柔的再相聚。感谢一路陪伴我们的家人、朋友和亲友，
+                  感谢你们见证我们的相识、相爱与走向新的生活。我们希望把这次答谢宴，
+                  做成一场带着甜美少女感和精致仪式感的小小庆典。
+                </p>
+                <div class="story-badges">
+                  <span class="badge">粉白奶油色</span>
+                  <span class="badge">蝴蝶结与蕾丝</span>
+                  <span class="badge">手机打开更好看</span>
+                  <span class="badge">适合微信分享</span>
+                </div>
+              </div>
+              <div class="story-visual">
+                <div class="story-quote">
+                  “希望你打开这张邀请函时，看到的不只是信息，
+                  而是一份被认真准备过的幸福感。”
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="details">
+        <div class="container">
+          <div class="section-tag reveal">Party Details</div>
+          <h2 class="section-title reveal">宴会安排</h2>
+          <p class="section-desc reveal">
+            为了方便大家查看，我们把最重要的时间、地点和赴约信息整理成了更适合手机阅读的卡片。
+          </p>
+
+          <div class="info-grid">
+            <article class="info-card reveal">
+              <div class="info-icon">📅</div>
+              <div class="info-label">DATE · 时间</div>
+              <div class="info-main">2026年 6月 15日</div>
+              <div class="info-sub">星期一<br />18:00 签到入席<br />18:30 宴席开始</div>
+            </article>
+
+            <article class="info-card reveal">
+              <div class="info-icon">📍</div>
+              <div class="info-label">LOCATION · 地点</div>
+              <div class="info-main">幸福大酒店</div>
+              <div class="info-sub">3楼 · 宴会厅<br />XX市 XX区 XX路88号</div>
+            </article>
+
+            <article class="info-card reveal">
+              <div class="info-icon">💌</div>
+              <div class="info-label">MESSAGE · 邀请</div>
+              <div class="info-main">甜蜜赴约</div>
+              <div class="info-sub">欢迎亲爱的家人和朋友们<br />一起见证我们的幸福答谢时刻</div>
+            </article>
+
+            <article class="info-card reveal">
+              <div class="info-icon">🎀</div>
+              <div class="info-label">DRESS CODE · 氛围</div>
+              <div class="info-main">温柔出席</div>
+              <div class="info-sub">无需拘谨，轻松到场即可<br />一起享受这份甜甜的相聚</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section dress-section" id="poster">
+        <div class="container">
+          <div class="section-tag reveal">Poster Preview</div>
+          <h2 class="section-title reveal">邀请函海报</h2>
+          <p class="section-desc reveal">
+            这张粉色 Lolita 风格邀请函，既可以当网页主视觉，也很适合你截屏、转发朋友圈，整体观感会比普通婚礼页更甜、更梦幻。
+          </p>
+
+          <div class="poster-layout">
+            <div class="poster-copy reveal">
+              <h3>这版页面更适合微信里看</h3>
+              <p>
+                我已经把页面改成了“首屏更抓眼、下滑更有层次、手机上更完整”的结构。
+                微信里点开后，第一眼会先看到大图和主卡片，继续往下才是安排信息和海报内容，观感会更像一份真正的线上邀请函。
+              </p>
+              <ul class="poster-points">
+                <li>首屏更有“打开就惊艳一下”的感觉</li>
+                <li>导航、卡片、按钮都对手机做了适配</li>
+                <li>整体保留 Lolita 元素，但不会太乱</li>
+              </ul>
+            </div>
+
+            <div class="gallery-box reveal">
+              <img src="./assets/invitation.png" alt="粉色Lolita风婚礼答谢宴邀请函海报" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="rsvp">
+        <div class="container">
+          <div class="cta-box reveal">
+            <div class="section-tag">Warm Reminder</div>
+            <h2 class="cta-title">期待与您相见</h2>
+            <p class="cta-sub">
+              微信里预览时，建议你先把图片文件和页面一起放到 Git 上，
+              然后用手机直接打开链接测试首屏效果、下滑节奏和图片清晰度。
+              如果你想再进一步，我下一步就可以继续帮你补：地图跳转、音乐开关、朋友圈分享文案、GitHub Pages 发布说明。
+            </p>
+            <div class="cta-actions">
+              <a class="btn btn-primary" href="#hero">回到顶部</a>
+              <a class="btn btn-secondary" href="#poster">查看主海报</a>
+            </div>
+            <div class="wechat-tip">建议在微信里多试两次：一次看首屏，一次下滑看整体层次。</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer reveal">
+      <div class="footer-line"></div>
+      <div>冯先生 · 熊女士 ｜ Sweet Lolita Wedding Thank You Party</div>
+    </footer>
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    function createPetal() {
+      const petal = document.createElement('span');
+      petal.className = 'floating-petal';
+      petal.style.left = Math.random() * window.innerWidth + 'px';
+      petal.style.animationDuration = (8 + Math.random() * 8) + 's';
+      petal.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
+      petal.style.opacity = (0.25 + Math.random() * 0.45).toFixed(2);
+      petal.style.transform = 'scale(' + (0.7 + Math.random() * 1.1).toFixed(2) + ')';
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), 17000);
+    }
+
+    setInterval(createPetal, 900);
+  </script>
+</body>
+</html>
