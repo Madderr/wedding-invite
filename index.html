@@ -42,15 +42,21 @@
 
     /* Real video layer */
     #video{
-      position:absolute; inset:0; width:100%; height:100%;
-      object-fit:cover; opacity:0; transition:opacity .35s ease;
-      background:#000;
+      position:absolute; inset:0; z-index:2; width:100%; height:100%;
+      object-fit:cover; opacity:0; transition:opacity .22s ease;
+      background:#000; pointer-events:none;
     }
     #video.visible{opacity:1}
+    #freezeFrame{
+      position:absolute; inset:0; z-index:3; width:100%; height:100%;
+      opacity:0; pointer-events:none; transition:opacity .12s ease;
+      background:#000;
+    }
+    #freezeFrame.show{opacity:1}
 
     /* Demo placeholder scene */
     #demoScene{
-      position:absolute; inset:-5%;
+      position:absolute; inset:-5%; z-index:1;
       opacity:1; transition:opacity .35s ease;
       overflow:hidden;
       transform:scale(1.04);
@@ -267,6 +273,38 @@
       border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.10);
     }
 
+    .media-gate{
+      position:absolute; inset:0; z-index:57;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:12px; padding:28px; text-align:center;
+      opacity:0; visibility:hidden; pointer-events:none;
+      transition:opacity .2s ease, visibility .2s;
+    }
+    .media-gate.show{opacity:1; visibility:visible}
+    .media-gate.retry{pointer-events:auto}
+    .media-status{font-size:13px; letter-spacing:.08em; opacity:.82; text-shadow:0 2px 10px rgba(0,0,0,.6)}
+    .spinner{
+      width:28px; height:28px; border-radius:50%;
+      border:2px solid rgba(255,255,255,.22); border-top-color:#fff;
+      animation:spin .8s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .retry-btn{
+      display:none; min-width:190px; height:52px; padding:0 22px;
+      border-radius:999px; border:1px solid rgba(255,255,255,.34);
+      background:rgba(16,20,24,.62); color:#fff; font-weight:650;
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    }
+    .media-gate.retry .spinner{display:none}
+    .media-gate.retry .retry-btn{display:block}
+    .debug-panel{
+      display:none; position:absolute; z-index:100; left:8px; right:8px; bottom:8px;
+      max-height:36%; overflow:auto; padding:8px 10px; border-radius:10px;
+      background:rgba(0,0,0,.78); color:#b9ffbd; font:11px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;
+      white-space:pre-wrap; pointer-events:none;
+    }
+    .debug-panel.show{display:block}
+
     .rotate-note{
       display:none;
       position:absolute; inset:0; z-index:90; background:#05070a;
@@ -279,7 +317,12 @@
 </head>
 <body>
   <main id="app">
-    <video id="video" playsinline webkit-playsinline preload="auto"></video>
+    <video id="video"
+      playsinline webkit-playsinline x5-playsinline="true"
+      preload="auto" disablepictureinpicture
+      controlslist="nodownload noplaybackrate noremoteplayback"
+      aria-label="婚礼互动视频"></video>
+    <canvas id="freezeFrame" aria-hidden="true"></canvas>
 
     <section id="demoScene" aria-hidden="true">
       <div class="scene-bg"></div>
@@ -324,22 +367,33 @@
       <button class="start-btn" id="startBtn">进入婚礼</button>
     </section>
 
+    <section class="media-gate" id="mediaGate" aria-live="polite">
+      <div class="spinner"></div>
+      <div class="media-status" id="mediaStatus">视频加载中…</div>
+      <button class="retry-btn" id="retryBtn">轻触继续播放</button>
+    </section>
+
     <div class="transition" id="transition"></div>
+    <div class="debug-panel" id="debugPanel"></div>
     <div class="rotate-note">请将手机转回竖屏观看</div>
   </main>
 
 <script>
 /**
- * Wedding Live Demo
- * -------------------------------------------------------------
- * DEMO_MODE = true  : 不依赖视频，用动态占位场景测试交互与切换。
- * DEMO_MODE = false : 使用下面 story 里的 video 文件。
+ * Wedding Live · WeChat-first player V2
  *
- * 把 MP4 放进 videos/ 后，只需改为 false 即可。
+ * 关键原则：
+ * 1) 用户点击后，video.play() 必须在同一个 click 调用栈里立即执行，前面不 await / setTimeout。
+ * 2) 视频真正触发 playing 之前不显示 <video>，避免微信/Android WebView 的原生大播放按钮或黑屏露出来。
+ * 3) 每段结束时把最后一帧画进 canvas，再隐藏 video；选择界面显示的是“冻结末帧”。
+ * 4) 当前视频播放时，后台预加载下一层分支视频。
+ * 5) 播放失败时只显示我们自己的“轻触继续播放”，不依赖浏览器原生控件。
  */
 const DEMO_MODE = false;
+const ALLOW_DEMO_FALLBACK = true; // 测试阶段：缺少后续 mp4 时仍能用占位场景继续流程
 const DEMO_SCENE_MS = 4200;
 const CEREMONY_SCENE_MS = 5200;
+const BUILD_ID = "wechat-v2-20260818";
 
 const story = {
   intro: {
@@ -425,7 +479,9 @@ const story = {
 };
 
 const $ = (s) => document.querySelector(s);
+const app = $("#app");
 const video = $("#video");
+const freezeFrame = $("#freezeFrame");
 const demoScene = $("#demoScene");
 const startScreen = $("#startScreen");
 const startBtn = $("#startBtn");
@@ -442,6 +498,13 @@ const topbar = $("#topbar");
 const muteBtn = $("#muteBtn");
 const endingCard = $("#endingCard");
 const restartBtn = $("#restartBtn");
+const mediaGate = $("#mediaGate");
+const mediaStatus = $("#mediaStatus");
+const retryBtn = $("#retryBtn");
+const debugPanel = $("#debugPanel");
+
+const DEBUG = new URLSearchParams(location.search).get("debug") === "1";
+if (DEBUG) debugPanel.classList.add("show");
 
 let currentId = null;
 let demoTimer = null;
@@ -449,8 +512,17 @@ let demoStart = 0;
 let raf = null;
 let muted = false;
 let sceneToken = 0;
+let loadingTimer = null;
+let didStartPlaying = false;
+const preloadPool = new Map();
 
-function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+function log(...args){
+  console.log("[WeddingLive]", ...args);
+  if (!DEBUG) return;
+  const line = `[${new Date().toLocaleTimeString()}] ${args.map(x => typeof x === "object" ? JSON.stringify(x) : String(x)).join(" ")}`;
+  debugPanel.textContent = (debugPanel.textContent + "\n" + line).trim().split("\n").slice(-18).join("\n");
+  debugPanel.scrollTop = debugPanel.scrollHeight;
+}
 
 function setCopy(node){
   eyebrow.textContent = node.eyebrow || "";
@@ -465,8 +537,10 @@ function setChoices(node){
   (node.choices || []).forEach(c => {
     const b = document.createElement("button");
     b.className = "choice-btn";
+    b.type = "button";
     b.textContent = c.text;
-    b.onclick = () => choose(c.next);
+    // 不能在这里加 await / 延时：play() 必须直接发生在这次点击里。
+    b.addEventListener("click", () => choose(c.next));
     choices.appendChild(b);
   });
 }
@@ -475,112 +549,260 @@ function showChoices(node){
   setChoices(node);
   choiceWrap.classList.add("show");
   progress.classList.remove("show");
+  preloadNext(node);
 }
 
 function hideChoices(){
   choiceWrap.classList.remove("show");
 }
 
+function hideMediaGate(){
+  clearTimeout(loadingTimer);
+  mediaGate.classList.remove("show", "retry");
+}
+
+function showLoadingDelayed(text = "视频加载中…"){
+  clearTimeout(loadingTimer);
+  loadingTimer = setTimeout(() => {
+    if (didStartPlaying) return;
+    mediaStatus.textContent = text;
+    mediaGate.classList.remove("retry");
+    mediaGate.classList.add("show");
+  }, 420);
+}
+
+function showRetry(text = "视频没有自动开始"){
+  clearTimeout(loadingTimer);
+  mediaStatus.textContent = text;
+  mediaGate.classList.add("show", "retry");
+  log("show retry");
+}
+
 function stopScene(){
   sceneToken++;
   clearTimeout(demoTimer);
+  clearTimeout(loadingTimer);
   cancelAnimationFrame(raf);
-  video.pause();
+  didStartPlaying = false;
+
+  video.onplaying = null;
   video.onended = null;
   video.ontimeupdate = null;
   video.onerror = null;
+  video.onwaiting = null;
+  video.onstalled = null;
+  video.onloadedmetadata = null;
+  try { video.pause(); } catch (_) {}
   progressFill.style.width = "0%";
+}
+
+function hideFreeze(){
+  freezeFrame.classList.remove("show");
+}
+
+function freezeCurrentFrame(){
+  if (!video.videoWidth || !video.videoHeight) return false;
+  try{
+    const rect = app.getBoundingClientRect();
+    const cw = Math.max(1, Math.round(rect.width));
+    const ch = Math.max(1, Math.round(rect.height));
+    freezeFrame.width = cw;
+    freezeFrame.height = ch;
+    const ctx = freezeFrame.getContext("2d", { alpha:false });
+
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    const sourceAR = vw / vh;
+    const targetAR = cw / ch;
+    let sx = 0, sy = 0, sw = vw, sh = vh;
+
+    // 与 object-fit: cover 一致的裁切。
+    if (sourceAR > targetAR){
+      sw = vh * targetAR;
+      sx = (vw - sw) / 2;
+    } else {
+      sh = vw / targetAR;
+      sy = (vh - sh) / 2;
+    }
+    ctx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch);
+    freezeFrame.classList.add("show");
+    video.classList.remove("visible");
+    log("freeze frame", `${vw}x${vh}`, "=>", `${cw}x${ch}`);
+    return true;
+  }catch(e){
+    log("freeze failed", e.name || e.message || e);
+    return false;
+  }
 }
 
 function updateDemoProgress(duration, token){
   const now = performance.now();
   const p = Math.min(1, (now - demoStart) / duration);
   progressFill.style.width = (p * 100).toFixed(1) + "%";
-  if (p < 1 && token === sceneToken) {
+  if (p < 1 && token === sceneToken){
     raf = requestAnimationFrame(() => updateDemoProgress(duration, token));
   }
 }
 
-async function playNode(id){
+function fallbackToDemo(node, token, reason){
+  if (token !== sceneToken) return;
+  log("fallback demo", currentId, reason || "");
+  hideMediaGate();
+  video.classList.remove("visible");
+  hideFreeze();
+  demoScene.classList.remove("hidden");
+  transition.classList.remove("on");
+
+  const duration = node.demoMs || DEMO_SCENE_MS;
+  demoStart = performance.now();
+  updateDemoProgress(duration, token);
+  demoTimer = setTimeout(() => {
+    if (token !== sceneToken) return;
+    if (node.ending) showEnding();
+    else showChoices(node);
+  }, duration);
+}
+
+function preloadNext(node){
+  if (DEMO_MODE || !node || !node.choices) return;
+  node.choices.forEach(choice => {
+    const next = story[choice.next];
+    if (!next || !next.video || preloadPool.has(next.video)) return;
+
+    const pv = document.createElement("video");
+    pv.preload = "auto";
+    pv.muted = true;
+    pv.playsInline = true;
+    pv.setAttribute("playsinline", "");
+    pv.setAttribute("webkit-playsinline", "");
+    pv.setAttribute("x5-playsinline", "true");
+    pv.src = next.video;
+    try { pv.load(); } catch (_) {}
+    preloadPool.set(next.video, pv);
+    log("preload", next.video);
+  });
+}
+
+function finishTransitionWhenPlaying(){
+  // 等一帧，让视频合成层先准备好，再退黑，减少 Android WebView 闪黑。
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    transition.classList.remove("on");
+  }));
+}
+
+function beginNode(id){
+  // 注意：如果 beginNode 是由按钮 click 调用，它内部直到 video.play() 之间不能 await。
   stopScene();
   currentId = id;
   const node = story[id];
   const token = sceneToken;
 
   hideChoices();
+  hideMediaGate();
   endingCard.classList.remove("show");
   progress.classList.add("show");
   setCopy(node);
+  hideFreeze();
 
   if (DEMO_MODE){
-    video.classList.remove("visible");
-    demoScene.classList.remove("hidden");
-    const duration = node.demoMs || DEMO_SCENE_MS;
-    demoStart = performance.now();
-    updateDemoProgress(duration, token);
-    demoTimer = setTimeout(() => {
-      if(token !== sceneToken) return;
-      if(node.ending) showEnding();
-      else showChoices(node);
-    }, duration);
+    fallbackToDemo(node, token, "DEMO_MODE");
     return;
   }
 
   demoScene.classList.add("hidden");
-  video.src = node.video;
+  video.classList.remove("visible");
   video.muted = muted;
-  video.currentTime = 0;
-  video.classList.add("visible");
+  video.controls = false;
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
+  video.setAttribute("x5-playsinline", "true");
+
+  video.onloadedmetadata = () => {
+    if (token !== sceneToken) return;
+    log("metadata", id, `${video.videoWidth}x${video.videoHeight}`, `duration=${video.duration.toFixed(2)}`);
+  };
 
   video.ontimeupdate = () => {
-    if(video.duration){
-      progressFill.style.width = ((video.currentTime / video.duration) * 100) + "%";
-    }
+    if (token !== sceneToken || !video.duration) return;
+    progressFill.style.width = ((video.currentTime / video.duration) * 100).toFixed(2) + "%";
+  };
+
+  video.onwaiting = () => {
+    if (token !== sceneToken || !didStartPlaying) return;
+    showLoadingDelayed("网络有点慢，正在缓冲…");
+    log("waiting", id, video.currentTime.toFixed(2));
+  };
+
+  video.onstalled = () => {
+    if (token !== sceneToken) return;
+    log("stalled", id);
+  };
+
+  video.onplaying = () => {
+    if (token !== sceneToken) return;
+    didStartPlaying = true;
+    hideMediaGate();
+    demoScene.classList.add("hidden");
+    video.classList.add("visible");
+    hideFreeze();
+    finishTransitionWhenPlaying();
+    preloadNext(node);
+    log("playing", id, `muted=${video.muted}`);
   };
 
   video.onended = () => {
-    if(node.ending) showEnding();
+    if (token !== sceneToken) return;
+    log("ended", id);
+    hideMediaGate();
+    freezeCurrentFrame();
+    if (node.ending) showEnding();
     else showChoices(node);
   };
 
   video.onerror = () => {
-    // 视频缺失时自动回退到 Demo 占位场景，避免整个流程中断。
-    video.classList.remove("visible");
-    demoScene.classList.remove("hidden");
-    const duration = node.demoMs || DEMO_SCENE_MS;
-    demoStart = performance.now();
-    updateDemoProgress(duration, token);
-    demoTimer = setTimeout(() => {
-      if(token !== sceneToken) return;
-      if(node.ending) showEnding();
-      else showChoices(node);
-    }, duration);
+    if (token !== sceneToken) return;
+    const code = video.error ? video.error.code : "unknown";
+    log("video error", id, code, node.video);
+    if (ALLOW_DEMO_FALLBACK) fallbackToDemo(node, token, `video error ${code}`);
+    else showRetry("视频加载失败，轻触重试");
   };
 
+  // 关键：src / load / play 全部同步执行；play() 调用前没有任何 await / timer。
+  video.src = node.video;
+  try { video.load(); } catch (_) {}
+  showLoadingDelayed("视频加载中…");
+
+  let playPromise;
   try{
-    await video.play();
+    playPromise = video.play();
+    log("play() invoked", id, node.video);
   }catch(e){
-    // 某些手机浏览器阻止播放时，用户已经点过开始按钮，通常不会进入这里。
-    video.muted = true;
-    muted = true;
-    updateMuteUI();
-    try{ await video.play(); }catch(_){}
+    log("play() throw", e.name || e.message || e);
+    showRetry("轻触继续播放");
+    return;
+  }
+
+  if (playPromise && typeof playPromise.catch === "function"){
+    playPromise.catch(err => {
+      if (token !== sceneToken || didStartPlaying) return;
+      // AbortError 常见于快速切换 src，不当成 codec 错误；当前 token 仍一致才提示。
+      log("play rejected", err && err.name, err && err.message);
+      showRetry("轻触继续播放");
+    });
   }
 }
 
-async function choose(nextId){
+function choose(nextId){
+  // 先盖黑场，但绝不等待动画；立刻 beginNode -> play()。
   hideChoices();
   transition.classList.add("on");
-  await sleep(280);
-  await playNode(nextId);
-  await sleep(110);
-  transition.classList.remove("on");
+  beginNode(nextId);
 }
 
 function showEnding(){
   progress.classList.remove("show");
   sceneCopy.classList.remove("show");
-  setTimeout(() => endingCard.classList.add("show"), 220);
+  setTimeout(() => endingCard.classList.add("show"), 180);
 }
 
 function updateMuteUI(){
@@ -588,32 +810,70 @@ function updateMuteUI(){
   video.muted = muted;
 }
 
-muteBtn.onclick = () => {
+muteBtn.addEventListener("click", () => {
   muted = !muted;
   updateMuteUI();
-};
-
-startBtn.onclick = async () => {
-  startScreen.classList.add("hide");
-  topbar.classList.add("show");
-  await sleep(220);
-  playNode("intro");
-};
-
-restartBtn.onclick = async () => {
-  transition.classList.add("on");
-  await sleep(280);
-  await playNode("intro");
-  await sleep(110);
-  transition.classList.remove("on");
-};
-
-document.addEventListener("visibilitychange", () => {
-  if(document.hidden && !DEMO_MODE) video.pause();
-  else if(!document.hidden && !DEMO_MODE && currentId && !choiceWrap.classList.contains("show") && !endingCard.classList.contains("show")){
-    video.play().catch(()=>{});
+  if (!video.paused) return;
+  // 静音键本身也是用户手势；若视频之前被策略拦截，可顺手重试。
+  if (currentId && !choiceWrap.classList.contains("show") && !endingCard.classList.contains("show")){
+    const p = video.play();
+    if (p && p.catch) p.catch(() => {});
   }
 });
+
+retryBtn.addEventListener("click", () => {
+  // 重试按钮必须直接调用 play()，不要在前面加异步。
+  mediaGate.classList.remove("retry");
+  mediaStatus.textContent = "正在继续播放…";
+  let p;
+  try{
+    p = video.play();
+    log("retry play() invoked", currentId);
+  }catch(e){
+    showRetry("还是没能播放，再点一次试试");
+    return;
+  }
+  if (p && p.catch){
+    p.catch(err => {
+      log("retry rejected", err && err.name, err && err.message);
+      showRetry("还是没能播放，再点一次试试");
+    });
+  }
+});
+
+startBtn.addEventListener("click", () => {
+  // 这是最重要的用户手势。不要 await！
+  startScreen.classList.add("hide");
+  topbar.classList.add("show");
+  transition.classList.add("on");
+  beginNode("intro");
+});
+
+restartBtn.addEventListener("click", () => {
+  transition.classList.add("on");
+  beginNode("intro");
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden){
+    try { video.pause(); } catch (_) {}
+    return;
+  }
+  if (!currentId || choiceWrap.classList.contains("show") || endingCard.classList.contains("show")) return;
+  // 从微信聊天切回来时可能失去自动播放权限；先尝试，失败就显示自定义按钮。
+  try{
+    const p = video.play();
+    if (p && p.catch) p.catch(() => showRetry("轻触继续播放"));
+  }catch(_){
+    showRetry("轻触继续播放");
+  }
+});
+
+window.addEventListener("pageshow", e => {
+  if (e.persisted) log("restored from bfcache");
+});
+
+log("build", BUILD_ID, navigator.userAgent);
 </script>
 </body>
 </html>
