@@ -1,0 +1,10 @@
+<svg width="360" height="220" viewBox="0 0 360 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="360" height="220" rx="24" fill="#D9EFF3"/>
+  <circle cx="280" cy="54" r="28" fill="#FFF5D9"/>
+  <path d="M0 111C52 95 96 97 142 112C184 126 238 132 302 120C327 115 344 109 360 111V168H0V111Z" fill="#62C1D1"/>
+  <path d="M0 166C56 152 102 155 158 171C207 184 271 188 360 168V220H0V166Z" fill="#F2DEC0"/>
+  <path d="M36 123C58 121 79 114 96 105" stroke="white" stroke-opacity="0.7" stroke-width="4" stroke-linecap="round"/>
+  <path d="M108 132C132 128 148 123 164 113" stroke="white" stroke-opacity="0.6" stroke-width="4" stroke-linecap="round"/>
+  <path d="M200 147C217 144 233 137 250 126" stroke="white" stroke-opacity="0.66" stroke-width="4" stroke-linecap="round"/>
+  <text x="26" y="36" fill="#FFFFFF" fill-opacity="0.95" font-size="17" font-family="Arial, Helvetica, sans-serif" letter-spacing="2">THE OCEAN</text>
+</svg>
