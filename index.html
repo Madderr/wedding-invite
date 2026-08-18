@@ -3,334 +3,155 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-  <meta name="theme-color" content="#05070a" />
+  <meta name="theme-color" content="#09141b" />
   <title>Wedding Live · Maldives</title>
   <style>
     :root{
-      --ui-pad: max(18px, env(safe-area-inset-left));
-      --bottom-safe: max(18px, env(safe-area-inset-bottom));
-      --ease: cubic-bezier(.2,.72,.2,1);
+      --ui-pad:max(18px, env(safe-area-inset-left));
+      --ui-right:max(18px, env(safe-area-inset-right));
+      --top-safe:max(16px, env(safe-area-inset-top));
+      --bottom-safe:max(18px, env(safe-area-inset-bottom));
+      --ease:cubic-bezier(.2,.72,.2,1);
+      --gold:#f4d4a3;
+      --gold-2:#d5ae77;
+      --soft:#fff9f1;
+      --ink:#f7fbfc;
+      --bg:#09141b;
     }
     *{box-sizing:border-box}
-    html,body{
-      width:100%; height:100%; margin:0; background:#05070a; color:#fff;
-      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Inter,system-ui,sans-serif;
-      overflow:hidden;
-    }
+    html,body{width:100%;height:100%;margin:0;background:var(--bg);color:#fff;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Inter,system-ui,sans-serif}
+    body{display:flex;align-items:center;justify-content:center}
     button{font:inherit}
-    body{
-      display:flex; align-items:center; justify-content:center;
-    }
-    #app{
-      position:relative;
-      width:100vw; height:100dvh;
-      overflow:hidden; background:#05070a;
-      isolation:isolate;
-    }
+    img{display:block;max-width:100%}
+    #app{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#05070a;isolation:isolate}
     @media (min-width:700px){
-      #app{
-        width:min(430px, 100vw);
-        height:min(932px, 100dvh);
-        border-radius:28px;
-        box-shadow:0 30px 90px rgba(0,0,0,.55);
-      }
-      body::before{
-        content:""; position:fixed; inset:0;
-        background:radial-gradient(circle at 50% 30%, #15202b 0%, #05070a 58%);
-      }
+      #app{width:min(430px,100vw);height:min(932px,100dvh);border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+      body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 30%, #17313a 0%, #081017 58%)}
     }
 
-    /* Real video layer */
-    #video{
-      position:absolute; inset:0; z-index:2; width:100%; height:100%;
-      object-fit:cover; opacity:0; transition:opacity .22s ease;
-      background:#000; pointer-events:none;
-    }
+    /* core media layers */
+    #video{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .22s ease;background:#000;pointer-events:none}
     #video.visible{opacity:1}
-    #freezeFrame{
-      position:absolute; inset:0; z-index:3; width:100%; height:100%;
-      opacity:0; pointer-events:none; transition:opacity .12s ease;
-      background:#000;
-    }
+    #freezeFrame{position:absolute;inset:0;z-index:3;width:100%;height:100%;opacity:0;pointer-events:none;transition:opacity .14s ease;background:#000}
     #freezeFrame.show{opacity:1}
 
-    /* Demo placeholder scene */
-    #demoScene{
-      position:absolute; inset:-5%; z-index:1;
-      opacity:1; transition:opacity .35s ease;
-      overflow:hidden;
-      transform:scale(1.04);
-    }
+    /* demo fallback */
+    #demoScene{position:absolute;inset:0;z-index:1;opacity:1;transition:opacity .35s ease;overflow:hidden;background:linear-gradient(180deg,#f4d0ac 0%,#8fd5e4 28%,#2a9aab 58%,#123947 100%)}
     #demoScene.hidden{opacity:0}
-    .scene-bg{
-      position:absolute; inset:0;
-      background:
-        radial-gradient(circle at 68% 22%, rgba(255,244,210,.75), transparent 22%),
-        linear-gradient(180deg, #7fc8d7 0%, #7bd0d2 32%, #1e8ea2 52%, #063847 72%, #071016 100%);
-      animation:drift 10s ease-in-out infinite alternate;
-    }
-    .scene-bg::before{
-      content:""; position:absolute; left:-15%; right:-15%; top:48%; height:14%;
-      background:linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.12));
-      filter:blur(7px); transform:skewY(-2deg);
-      opacity:.55;
-    }
-    .scene-bg::after{
-      content:""; position:absolute; left:-10%; right:-10%; bottom:-2%; height:36%;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,.16), transparent 28%),
-        linear-gradient(180deg, #d8c395 0%, #a88658 65%, #5f4935 100%);
-      transform:rotate(-2deg);
-    }
-    @keyframes drift{
-      from{transform:scale(1.02) translate3d(-1.5%,0,0)}
-      to{transform:scale(1.08) translate3d(1.5%,-1%,0)}
-    }
+    #demoScene .demo-glow{position:absolute;inset:-10%;background:radial-gradient(circle at 75% 20%, rgba(255,248,222,.72), transparent 20%),radial-gradient(circle at 20% 70%, rgba(255,255,255,.2), transparent 18%);filter:blur(10px);animation:floatGlow 8s ease-in-out infinite alternate}
+    @keyframes floatGlow{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(1%,-2%,0) scale(1.08)}}
+    #demoScene img{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:100%;height:100%;object-fit:cover;opacity:.95}
 
-    .palm{
-      position:absolute; width:18px; height:58%; background:#3b281e;
-      left:10%; bottom:18%; transform:rotate(8deg); border-radius:999px;
-      filter:drop-shadow(0 14px 18px rgba(0,0,0,.18));
-      opacity:.72;
-    }
-    .palm::before{
-      content:""; position:absolute; width:170px; height:85px; left:-68px; top:-20px;
-      background:conic-gradient(from 10deg,
-        transparent 0 10deg,#274a34 11deg 25deg,transparent 26deg 42deg,
-        #315f42 43deg 58deg,transparent 59deg 76deg,#24432f 77deg 94deg,
-        transparent 95deg 115deg,#39694b 116deg 132deg,transparent 133deg 152deg,
-        #2e563c 153deg 170deg,transparent 171deg 360deg);
-      border-radius:50%;
-      transform:rotate(-6deg);
-    }
-    .arch{
-      position:absolute; left:50%; bottom:23%; width:50%; height:31%;
-      transform:translateX(-50%);
-      border:6px solid rgba(255,255,255,.88);
-      border-bottom:0;
-      border-radius:120px 120px 0 0;
-      box-shadow:0 8px 30px rgba(0,0,0,.12);
-    }
-    .arch::before,.arch::after{
-      content:""; position:absolute; width:48px; height:48px; border-radius:50%;
-      background:radial-gradient(circle, #fff 0 18%, #ffd9d9 19% 33%, #f5f0d8 34% 52%, transparent 54%);
-    }
-    .arch::before{left:-28px; top:34%}
-    .arch::after{right:-28px; top:18%}
+    .film{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(0,0,0,.32) 0%, transparent 24%, transparent 62%, rgba(0,0,0,.62) 100%),radial-gradient(circle at 50% 44%, transparent 36%, rgba(0,0,0,.16) 100%);z-index:4}
+    .grain{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.72'/%3E%3C/svg%3E");animation:noise .22s steps(2) infinite}
+    @keyframes noise{0%{transform:translate(0,0)}25%{transform:translate(-2%,1%)}50%{transform:translate(1%,-2%)}75%{transform:translate(2%,2%)}100%{transform:translate(-1%,-1%)}}
 
-    .silhouette{
-      position:absolute; bottom:20.5%; width:10%; height:18%;
-      border-radius:45% 45% 14% 14%;
-      background:linear-gradient(#25282b,#101214);
-      filter:drop-shadow(0 10px 10px rgba(0,0,0,.25));
-      opacity:.92;
-    }
-    .silhouette::before{
-      content:""; position:absolute; width:52%; aspect-ratio:1; border-radius:50%;
-      background:#181b1d; top:-28%; left:24%;
-    }
-    .silhouette.left{left:41%}
-    .silhouette.right{right:40%; transform:scaleX(.92)}
-    .guest{
-      position:absolute; bottom:19%; left:15%; width:8%; height:15%;
-      border-radius:45% 45% 15% 15%;
-      background:#202529; opacity:.88;
-    }
-    .guest::before{
-      content:""; position:absolute; width:50%; aspect-ratio:1; border-radius:50%;
-      background:#202529; left:25%; top:-24%;
-    }
+    /* live scene text */
+    .scene-copy{position:absolute;left:var(--ui-pad);right:var(--ui-right);top:calc(var(--top-safe) + 26px);z-index:8;opacity:0;transform:translateY(8px);transition:.6s var(--ease);text-shadow:0 2px 18px rgba(0,0,0,.45);pointer-events:none}
+    .scene-copy.show{opacity:1;transform:translateY(0)}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:10px;letter-spacing:.24em;text-transform:uppercase;opacity:.92;margin-bottom:10px;border:1px solid rgba(255,255,255,.13)}
+    .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(244,212,163,.16)}
+    .scene-title{max-width:88%;font-size:31px;line-height:1.15;font-weight:700;letter-spacing:.02em}
+    .scene-sub{margin-top:10px;max-width:80%;font-size:14px;line-height:1.65;opacity:.88}
 
-    .film{
-      position:absolute; inset:0; pointer-events:none;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.26) 0%, transparent 24%, transparent 64%, rgba(0,0,0,.58) 100%),
-        radial-gradient(circle at 50% 44%, transparent 42%, rgba(0,0,0,.18) 100%);
-      z-index:4;
-    }
-    .grain{
-      position:absolute; inset:0; z-index:5; pointer-events:none; opacity:.055;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
-      animation:noise .2s steps(2) infinite;
-    }
-    @keyframes noise{
-      0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(2%,2%)} 100%{transform:translate(-1%,-1%)}
-    }
-
-    .scene-copy{
-      position:absolute; left:var(--ui-pad); right:var(--ui-pad); top:max(24px, env(safe-area-inset-top));
-      z-index:8; opacity:0; transform:translateY(8px);
-      transition:.6s var(--ease); text-shadow:0 2px 18px rgba(0,0,0,.45);
-      pointer-events:none;
-    }
-    .scene-copy.show{opacity:1; transform:translateY(0)}
-    .eyebrow{
-      font-size:11px; letter-spacing:.26em; text-transform:uppercase; opacity:.72; margin-bottom:7px;
-    }
-    .scene-title{
-      font-size:25px; line-height:1.2; font-weight:650; letter-spacing:.02em;
-    }
-    .scene-sub{
-      margin-top:8px; max-width:80%; font-size:14px; line-height:1.55; opacity:.82;
-    }
-
-    .topbar{
-      position:absolute; z-index:20; top:max(12px, env(safe-area-inset-top)); right:14px;
-      display:flex; gap:8px; opacity:0; transition:.3s ease;
-    }
+    .topbar{position:absolute;z-index:20;top:calc(var(--top-safe) + 12px);right:14px;display:flex;gap:8px;opacity:0;transition:.3s ease}
     .topbar.show{opacity:1}
-    .icon-btn{
-      width:38px; height:38px; border:1px solid rgba(255,255,255,.18);
-      border-radius:999px; color:#fff; background:rgba(0,0,0,.20);
-      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-    }
+    .icon-btn{width:38px;height:38px;border:1px solid rgba(255,255,255,.18);border-radius:999px;color:#fff;background:rgba(5,10,14,.24);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 
-    .progress{
-      position:absolute; z-index:18; left:18px; right:18px; top:max(10px, env(safe-area-inset-top));
-      height:2px; background:rgba(255,255,255,.16); opacity:0; transition:.3s;
-      overflow:hidden; border-radius:999px;
-    }
+    .progress{position:absolute;z-index:18;left:18px;right:18px;top:calc(var(--top-safe) + 10px);height:2px;background:rgba(255,255,255,.16);opacity:0;transition:.3s;overflow:hidden;border-radius:999px}
     .progress.show{opacity:1}
-    .progress > i{
-      display:block; width:0%; height:100%; background:#fff; opacity:.75;
-      transition:width .15s linear;
-    }
+    .progress > i{display:block;width:0%;height:100%;background:linear-gradient(90deg,#fff2db,#ffffff);opacity:.85;transition:width .15s linear}
 
-    .choice-wrap{
-      position:absolute; z-index:30; left:0; right:0; bottom:0;
-      padding:26px 18px calc(var(--bottom-safe) + 12px);
-      background:linear-gradient(180deg, transparent, rgba(3,7,10,.52) 26%, rgba(3,7,10,.82) 100%);
-      opacity:0; transform:translateY(24px); pointer-events:none;
-      transition:.45s var(--ease);
-    }
-    .choice-wrap.show{
-      opacity:1; transform:translateY(0); pointer-events:auto;
-    }
-    .choice-hint{
-      text-align:center; font-size:12px; letter-spacing:.18em; opacity:.65; margin-bottom:12px;
-    }
-    .choices{display:grid; gap:10px}
-    .choice-btn{
-      min-height:58px; width:100%; padding:14px 18px; border-radius:18px;
-      border:1px solid rgba(255,255,255,.24);
-      background:rgba(8,14,18,.44); color:#fff; font-size:16px; font-weight:600;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 30px rgba(0,0,0,.16);
-      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-      transition:transform .16s ease, background .16s ease, border-color .16s ease;
-    }
-    .choice-btn:active{
-      transform:scale(.975); background:rgba(255,255,255,.17); border-color:rgba(255,255,255,.48);
-    }
+    .choice-wrap{position:absolute;z-index:30;left:0;right:0;bottom:0;padding:18px 16px calc(var(--bottom-safe) + 14px);background:linear-gradient(180deg, transparent 0%, rgba(2,7,10,.12) 12%, rgba(2,7,10,.76) 48%, rgba(2,7,10,.92) 100%);opacity:0;transform:translateY(24px);pointer-events:none;transition:.45s var(--ease)}
+    .choice-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto}
+    .choice-header{margin:0 auto 12px;max-width:220px;padding:8px 12px;border-radius:999px;text-align:center;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.76);border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05)}
+    .choices{display:grid;gap:10px}
+    .choice-btn{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;width:100%;padding:14px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.18);background:rgba(245,249,252,.08);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 30px rgba(0,0,0,.16);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:transform .16s ease, background .16s ease, border-color .16s ease}
+    .choice-btn span{font-size:16px;font-weight:620;letter-spacing:.01em;text-align:left}
+    .choice-btn em{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;border-radius:999px;font-style:normal;background:rgba(255,255,255,.14);font-size:18px;line-height:1;opacity:.92}
+    .choice-btn:active{transform:scale(.975);background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.42)}
 
-    .start{
-      position:absolute; inset:0; z-index:60; display:flex; flex-direction:column;
-      align-items:center; justify-content:flex-end; text-align:center;
-      padding:40px 24px calc(var(--bottom-safe) + 40px);
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.03) 0%, rgba(0,0,0,.08) 48%, rgba(0,0,0,.66) 100%),
-        radial-gradient(circle at 64% 22%, rgba(255,245,218,.94), transparent 18%),
-        linear-gradient(180deg,#8fd2df 0%,#59bdc5 39%,#12859a 58%,#0c2833 100%);
-      transition:opacity .55s ease, visibility .55s;
-    }
-    .start.hide{opacity:0; visibility:hidden}
-    .start::after{
-      content:""; position:absolute; left:-10%; right:-10%; bottom:0; height:35%;
-      background:linear-gradient(180deg,#dcc79a,#a98d62); transform:rotate(-2deg); z-index:-1;
-    }
-    .start-kicker{font-size:11px; letter-spacing:.34em; opacity:.78; margin-bottom:12px}
-    .start h1{margin:0; font-family:Georgia,"Times New Roman",serif; font-size:42px; font-weight:500; letter-spacing:.02em}
-    .start p{margin:10px 0 26px; font-size:14px; opacity:.8}
-    .start-btn{
-      width:min(290px,82vw); height:58px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.42); color:#fff; font-size:15px; font-weight:650;
-      background:rgba(10,18,22,.26);
-      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-      box-shadow:0 14px 40px rgba(0,0,0,.20);
-    }
+    /* cover page */
+    .start{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;justify-content:space-between;padding:calc(var(--top-safe) + 18px) 18px calc(var(--bottom-safe) + 22px);background:linear-gradient(180deg, rgba(10,20,26,.12) 0%, rgba(8,14,18,.58) 52%, rgba(5,8,10,.92) 100%),radial-gradient(circle at 72% 12%, rgba(255,234,191,.55), transparent 24%),linear-gradient(180deg,#7fcfdd 0%,#4eb6c5 34%,#0f6279 64%,#071219 100%);transition:opacity .55s ease, visibility .55s;overflow:hidden}
+    .start.hide{opacity:0;visibility:hidden}
+    .start::before,.start::after{content:"";position:absolute;border-radius:50%;filter:blur(30px);opacity:.45;pointer-events:none}
+    .start::before{width:180px;height:180px;background:rgba(255,241,213,.6);right:-40px;top:30px}
+    .start::after{width:210px;height:210px;background:rgba(255,212,176,.28);left:-80px;bottom:180px}
+    .start-shell,.start-shell-2{position:absolute;inset:auto;pointer-events:none;opacity:.85}
+    .start-shell{right:18px;bottom:142px;width:62px;height:62px;background:radial-gradient(circle at 50% 55%, rgba(255,255,255,.55), transparent 58%),conic-gradient(from 180deg at 50% 100%, #fff2d9 0deg, #f7caa5 78deg, #f3e2c4 128deg, #fdecd0 210deg, #fff2d9 360deg);border-radius:22px 22px 40px 40px;transform:rotate(18deg);filter:drop-shadow(0 8px 16px rgba(0,0,0,.18))}
+    .start-shell-2{left:22px;top:96px;width:24px;height:24px;border:2px solid rgba(255,255,255,.32);border-radius:50%;box-shadow:10px 8px 0 -7px rgba(255,255,255,.25),18px 20px 0 -9px rgba(255,255,255,.22)}
+    .cover-topline{display:flex;justify-content:space-between;align-items:center;gap:12px;position:relative;z-index:2;color:rgba(255,255,255,.92)}
+    .cover-logo{display:flex;align-items:center;gap:10px}
+    .cover-logo-badge{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff6e0, #eecf95);box-shadow:0 0 0 4px rgba(255,255,255,.08)}
+    .cover-logo-text strong{display:block;font-size:13px;letter-spacing:.14em}
+    .cover-logo-text span{display:block;font-size:11px;opacity:.72;letter-spacing:.18em;text-transform:uppercase}
+    .cover-chip{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);font-size:10px;letter-spacing:.2em;text-transform:uppercase;backdrop-filter:blur(12px)}
+    .hero-card{position:relative;z-index:2;margin-top:10px;padding:16px;border-radius:30px;background:linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.22)}
+    .hero-card::after{content:"";position:absolute;inset:10px;border-radius:24px;border:1px solid rgba(255,255,255,.08);pointer-events:none}
+    .hero-art{position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#ebfbff,#7bc6d0 58%,#0f5264);aspect-ratio:0.94/1;box-shadow:0 14px 28px rgba(0,0,0,.16)}
+    .hero-art img{width:100%;height:100%;object-fit:cover}
+    .hero-floating-note{position:absolute;right:12px;top:12px;padding:8px 10px;border-radius:16px;background:rgba(255,255,255,.78);color:#1f3944;font-size:11px;line-height:1.4;letter-spacing:.02em;box-shadow:0 10px 24px rgba(0,0,0,.12)}
+    .hero-body{padding:18px 6px 6px;text-align:center}
+    .hero-overline{margin-bottom:8px;font-size:11px;letter-spacing:.34em;color:rgba(255,255,255,.72);text-transform:uppercase}
+    .hero-title{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:44px;line-height:1.05;letter-spacing:.02em;text-shadow:0 6px 26px rgba(0,0,0,.24)}
+    .hero-subtitle{margin:8px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:18px;font-style:italic;color:var(--gold)}
+    .cover-copy{margin:14px auto 0;max-width:280px;font-size:14px;line-height:1.7;color:rgba(255,255,255,.88)}
+    .cover-meta{margin-top:12px;display:flex;justify-content:center;align-items:center;gap:10px;color:rgba(255,255,255,.72);font-size:13px;letter-spacing:.06em}
+    .cover-divider{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.45)}
+    .start-btn{margin-top:18px;width:min(290px,82vw);height:56px;border-radius:999px;border:1px solid rgba(255,255,255,.30);color:#fff;font-size:15px;font-weight:680;background:linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.12));box-shadow:0 16px 40px rgba(0,0,0,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .start-btn:active{transform:scale(.985)}
+    .memory-strip{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .memory-card{position:relative;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);box-shadow:0 12px 30px rgba(0,0,0,.16)}
+    .memory-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0) 18%, rgba(0,0,0,.52) 100%)}
+    .memory-card img{width:100%;aspect-ratio:0.82/1;object-fit:cover}
+    .memory-card .tag{position:absolute;left:10px;bottom:11px;z-index:1;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#fff}
 
-    .transition{
-      position:absolute; inset:0; z-index:55; background:#020406;
-      opacity:0; pointer-events:none; transition:opacity .32s ease;
-    }
+    .transition{position:absolute;inset:0;z-index:55;background:#020406;opacity:0;pointer-events:none;transition:opacity .28s ease}
     .transition.on{opacity:1}
 
-    .ending-card{
-      position:absolute; inset:0; z-index:42; display:flex; flex-direction:column;
-      align-items:center; justify-content:center; text-align:center; padding:34px;
-      background:rgba(2,4,6,.46);
-      backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
-      opacity:0; pointer-events:none; transition:.7s ease;
-    }
-    .ending-card.show{opacity:1; pointer-events:auto}
-    .ending-card small{letter-spacing:.34em; opacity:.68}
-    .ending-card h2{
-      font-family:Georgia,"Times New Roman",serif; font-size:42px; font-weight:500;
-      margin:12px 0 4px;
-    }
-    .ending-card p{margin:0 0 28px; opacity:.78}
-    .restart{
-      min-width:180px; height:50px; border-radius:999px; color:#fff;
-      border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.10);
-    }
+    /* ending */
+    .ending-card{position:absolute;inset:0;z-index:42;display:flex;align-items:flex-end;justify-content:center;padding:24px 18px calc(var(--bottom-safe) + 18px);opacity:0;pointer-events:none;transition:.7s ease;background:linear-gradient(180deg, rgba(4,10,14,.12), rgba(2,6,8,.72) 58%, rgba(1,4,6,.92) 100%)}
+    .ending-card.show{opacity:1;pointer-events:auto}
+    .ending-scene{position:absolute;inset:0;overflow:hidden}
+    .ending-scene img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);animation:slowZoom 12s ease-in-out infinite alternate}
+    @keyframes slowZoom{from{transform:scale(1.04) translateY(0)}to{transform:scale(1.1) translateY(-1.4%)}}
+    .ending-sparkle,.ending-sparkle::before,.ending-sparkle::after{position:absolute;border-radius:50%;background:radial-gradient(circle, rgba(255,245,214,.95), rgba(255,245,214,0));filter:blur(1px)}
+    .ending-sparkle{width:7px;height:7px;left:18%;top:22%;animation:spark 3.4s ease-in-out infinite}
+    .ending-sparkle::before{content:"";width:5px;height:5px;left:140px;top:64px;animation:spark 4.1s ease-in-out infinite .5s}
+    .ending-sparkle::after{content:"";width:6px;height:6px;left:240px;top:140px;animation:spark 4.8s ease-in-out infinite 1s}
+    @keyframes spark{0%,100%{opacity:.28;transform:translateY(0) scale(.9)}50%{opacity:1;transform:translateY(-8px) scale(1.06)}}
+    .ending-panel{position:relative;z-index:1;width:100%;padding:22px 20px 20px;border-radius:28px;background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.24)}
+    .ending-panel::after{content:"";position:absolute;inset:10px;border-radius:22px;border:1px solid rgba(255,255,255,.08);pointer-events:none}
+    .ending-card small{display:block;letter-spacing:.34em;opacity:.68;font-size:11px}
+    .ending-card h2{margin:12px 0 4px;font-family:Georgia,"Times New Roman",serif;font-size:36px;font-weight:500;line-height:1.1}
+    .ending-lead{margin:0;color:rgba(255,255,255,.9);font-size:15px}
+    .ending-meta{margin-top:10px;display:flex;justify-content:center;align-items:center;gap:10px;color:rgba(255,255,255,.72);font-size:13px;letter-spacing:.08em}
+    .ending-copy{margin:16px auto 0;max-width:280px;color:rgba(255,255,255,.82);font-size:14px;line-height:1.7}
+    .restart{margin-top:18px;min-width:185px;height:50px;border-radius:999px;color:#fff;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.11);font-weight:650}
 
-    .media-gate{
-      position:absolute; inset:0; z-index:57;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      gap:12px; padding:28px; text-align:center;
-      opacity:0; visibility:hidden; pointer-events:none;
-      transition:opacity .2s ease, visibility .2s;
-    }
-    .media-gate.show{opacity:1; visibility:visible}
+    .media-gate{position:absolute;inset:0;z-index:57;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:28px;text-align:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease, visibility .2s}
+    .media-gate.show{opacity:1;visibility:visible}
     .media-gate.retry{pointer-events:auto}
-    .media-status{font-size:13px; letter-spacing:.08em; opacity:.82; text-shadow:0 2px 10px rgba(0,0,0,.6)}
-    .spinner{
-      width:28px; height:28px; border-radius:50%;
-      border:2px solid rgba(255,255,255,.22); border-top-color:#fff;
-      animation:spin .8s linear infinite;
-    }
+    .media-status{font-size:13px;letter-spacing:.08em;opacity:.82;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+    .spinner{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.22);border-top-color:#fff;animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .retry-btn{
-      display:none; min-width:190px; height:52px; padding:0 22px;
-      border-radius:999px; border:1px solid rgba(255,255,255,.34);
-      background:rgba(16,20,24,.62); color:#fff; font-weight:650;
-      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-    }
+    .retry-btn{display:none;min-width:190px;height:52px;padding:0 22px;border-radius:999px;border:1px solid rgba(255,255,255,.34);background:rgba(16,20,24,.62);color:#fff;font-weight:650;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
     .media-gate.retry .spinner{display:none}
     .media-gate.retry .retry-btn{display:block}
-    .debug-panel{
-      display:none; position:absolute; z-index:100; left:8px; right:8px; bottom:8px;
-      max-height:36%; overflow:auto; padding:8px 10px; border-radius:10px;
-      background:rgba(0,0,0,.78); color:#b9ffbd; font:11px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;
-      white-space:pre-wrap; pointer-events:none;
-    }
+    .debug-panel{display:none;position:absolute;z-index:100;left:8px;right:8px;bottom:8px;max-height:36%;overflow:auto;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.78);color:#b9ffbd;font:11px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;pointer-events:none}
     .debug-panel.show{display:block}
-
-    .rotate-note{
-      display:none;
-      position:absolute; inset:0; z-index:90; background:#05070a;
-      align-items:center; justify-content:center; text-align:center; padding:30px;
-    }
-    @media (orientation:landscape) and (max-height:600px){
-      .rotate-note{display:flex}
-    }
+    .rotate-note{display:none;position:absolute;inset:0;z-index:90;background:#05070a;align-items:center;justify-content:center;text-align:center;padding:30px}
+    @media (orientation:landscape) and (max-height:600px){.rotate-note{display:flex}}
   </style>
 </head>
 <body>
   <main id="app">
-    <video id="video"
-      playsinline webkit-playsinline x5-playsinline="true"
-      preload="auto" disablepictureinpicture
-      controlslist="nodownload noplaybackrate noremoteplayback"
-      aria-label="婚礼互动视频"></video>
+    <video id="video" playsinline webkit-playsinline x5-playsinline="true" preload="auto" disablepictureinpicture controlslist="nodownload noplaybackrate noremoteplayback" aria-label="婚礼互动视频"></video>
     <canvas id="freezeFrame" aria-hidden="true"></canvas>
 
     <section id="demoScene" aria-hidden="true">
-      <div class="scene-bg"></div>
-      <div class="palm"></div>
-      <div class="arch"></div>
-      <div class="silhouette left"></div>
-      <div class="silhouette right"></div>
-      <div class="guest"></div>
+      <div class="demo-glow"></div>
+      <img src="assets/hero_scene.svg" alt="" />
     </section>
 
     <div class="film"></div>
@@ -349,22 +170,57 @@
     </div>
 
     <section class="choice-wrap" id="choiceWrap">
-      <div class="choice-hint">MAKE A CHOICE</div>
+      <div class="choice-header">选择你的视角</div>
       <div class="choices" id="choices"></div>
     </section>
 
     <section class="ending-card" id="endingCard">
-      <small>JUST MARRIED</small>
-      <h2>Maldives</h2>
-      <p>我们的婚礼 · 2026</p>
-      <button class="restart" id="restartBtn">再看一次</button>
+      <div class="ending-scene"><img src="assets/end_scene.svg" alt="" /></div>
+      <div class="ending-sparkle"></div>
+      <div class="ending-panel">
+        <small>JUST MARRIED</small>
+        <h2 id="endCouple">新郎 × 新娘</h2>
+        <p class="ending-lead">谢谢你见证我们的这一刻</p>
+        <div class="ending-meta"><span id="endPlace">Maldives</span><span class="cover-divider"></span><span id="endDate">2026.08.29</span></div>
+        <p class="ending-copy">愿海风、日落与这一刻，永远停留在我们的故事里。也谢谢你，在这个小小的互动婚礼里，陪我们走到最后。</p>
+        <button class="restart" id="restartBtn">再看一次</button>
+      </div>
     </section>
 
     <section class="start" id="startScreen">
-      <div class="start-kicker">WEDDING LIVE</div>
-      <h1>Maldives</h1>
-      <p>你收到了一份来自海边的婚礼邀请</p>
-      <button class="start-btn" id="startBtn">进入婚礼</button>
+      <div class="start-shell"></div>
+      <div class="start-shell-2"></div>
+      <div class="cover-topline">
+        <div class="cover-logo">
+          <div class="cover-logo-badge"></div>
+          <div class="cover-logo-text">
+            <strong>WEDDING LIVE</strong>
+            <span>Interactive Wedding Film</span>
+          </div>
+        </div>
+        <div class="cover-chip">Private Invite</div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-art">
+          <img src="assets/hero_scene.svg" alt="Maldives wedding" />
+          <div class="hero-floating-note">来自海边的婚礼邀请<br/>轻触开启一段互动短片</div>
+        </div>
+        <div class="hero-body">
+          <div class="hero-overline">Wedding by the Sea</div>
+          <h1 class="hero-title" id="coverCouple">新郎 &amp; 新娘</h1>
+          <p class="hero-subtitle" id="coverPlaceTitle">Maldives</p>
+          <p class="cover-copy">你收到了一份来自海边的婚礼邀请。轻触进入，沿着不同的选择，见证我们的婚礼、海风与这一刻的浪漫。</p>
+          <div class="cover-meta"><span id="coverDate">2026.08.29</span><span class="cover-divider"></span><span id="coverPlace">Maldives</span></div>
+          <button class="start-btn" id="startBtn">进入婚礼</button>
+        </div>
+      </div>
+
+      <div class="memory-strip">
+        <article class="memory-card"><img src="assets/thumb_ocean.svg" alt="Ocean" /><span class="tag">ARRIVAL</span></article>
+        <article class="memory-card"><img src="assets/thumb_vows.svg" alt="Vows" /><span class="tag">CEREMONY</span></article>
+        <article class="memory-card"><img src="assets/thumb_cheers.svg" alt="Cheers" /><span class="tag">BLESSINGS</span></article>
+      </div>
     </section>
 
     <section class="media-gate" id="mediaGate" aria-live="polite">
@@ -379,28 +235,25 @@
   </main>
 
 <script>
-/**
- * Wedding Live · WeChat-first player V2
- *
- * 关键原则：
- * 1) 用户点击后，video.play() 必须在同一个 click 调用栈里立即执行，前面不 await / setTimeout。
- * 2) 视频真正触发 playing 之前不显示 <video>，避免微信/Android WebView 的原生大播放按钮或黑屏露出来。
- * 3) 每段结束时把最后一帧画进 canvas，再隐藏 video；选择界面显示的是“冻结末帧”。
- * 4) 当前视频播放时，后台预加载下一层分支视频。
- * 5) 播放失败时只显示我们自己的“轻触继续播放”，不依赖浏览器原生控件。
- */
-const DEMO_MODE = false;
-const ALLOW_DEMO_FALLBACK = true; // 测试阶段：缺少后续 mp4 时仍能用占位场景继续流程
+const PROJECT = {
+  groom: "新郎",
+  bride: "新娘",
+  date: "2026.08.29",
+  place: "Maldives"
+};
+
+const DEMO_MODE = true;
+const ALLOW_DEMO_FALLBACK = true;
 const DEMO_SCENE_MS = 4200;
 const CEREMONY_SCENE_MS = 5200;
-const BUILD_ID = "wechat-v2-20260818";
+const BUILD_ID = "v3-pretty-cover-20260818";
 
 const story = {
   intro: {
     eyebrow: "MALDIVES · DAY 1",
     title: "今天，有两个人要在这里结婚。",
     sub: "而你，也收到了邀请。",
-    video: "https://mywedding-1305067887.cos.ap-shanghai.myqcloud.com/videos/01_intro.mp4",
+    video: "videos/01_intro.mp4",
     choices: [
       { text: "去看看他们", next: "couple" },
       { text: "先看看这片海", next: "ocean" }
@@ -472,7 +325,7 @@ const story = {
   ending: {
     eyebrow: "JUST MARRIED",
     title: "谢谢你来参加我们的婚礼。",
-    sub: "Maldives · 2026",
+    sub: `${PROJECT.place} · ${PROJECT.date}`,
     video: "videos/07_ending.mp4",
     ending: true
   }
@@ -516,6 +369,19 @@ let loadingTimer = null;
 let didStartPlaying = false;
 const preloadPool = new Map();
 
+function initProjectText(){
+  const coupleAmp = `${PROJECT.groom} & ${PROJECT.bride}`;
+  const coupleCross = `${PROJECT.groom} × ${PROJECT.bride}`;
+  $("#coverCouple").textContent = coupleAmp;
+  $("#coverPlaceTitle").textContent = PROJECT.place;
+  $("#coverDate").textContent = PROJECT.date;
+  $("#coverPlace").textContent = PROJECT.place;
+  $("#endCouple").textContent = coupleCross;
+  $("#endDate").textContent = PROJECT.date;
+  $("#endPlace").textContent = PROJECT.place;
+  document.title = `Wedding Live · ${PROJECT.place}`;
+}
+
 function log(...args){
   console.log("[WeddingLive]", ...args);
   if (!DEBUG) return;
@@ -538,8 +404,7 @@ function setChoices(node){
     const b = document.createElement("button");
     b.className = "choice-btn";
     b.type = "button";
-    b.textContent = c.text;
-    // 不能在这里加 await / 延时：play() 必须直接发生在这次点击里。
+    b.innerHTML = `<span>${c.text}</span><em>›</em>`;
     b.addEventListener("click", () => choose(c.next));
     choices.appendChild(b);
   });
@@ -552,14 +417,8 @@ function showChoices(node){
   preloadNext(node);
 }
 
-function hideChoices(){
-  choiceWrap.classList.remove("show");
-}
-
-function hideMediaGate(){
-  clearTimeout(loadingTimer);
-  mediaGate.classList.remove("show", "retry");
-}
+function hideChoices(){ choiceWrap.classList.remove("show"); }
+function hideMediaGate(){ clearTimeout(loadingTimer); mediaGate.classList.remove("show", "retry"); }
 
 function showLoadingDelayed(text = "视频加载中…"){
   clearTimeout(loadingTimer);
@@ -584,7 +443,6 @@ function stopScene(){
   clearTimeout(loadingTimer);
   cancelAnimationFrame(raf);
   didStartPlaying = false;
-
   video.onplaying = null;
   video.onended = null;
   video.ontimeupdate = null;
@@ -596,9 +454,7 @@ function stopScene(){
   progressFill.style.width = "0%";
 }
 
-function hideFreeze(){
-  freezeFrame.classList.remove("show");
-}
+function hideFreeze(){ freezeFrame.classList.remove("show"); }
 
 function freezeCurrentFrame(){
   if (!video.videoWidth || !video.videoHeight) return false;
@@ -609,39 +465,24 @@ function freezeCurrentFrame(){
     freezeFrame.width = cw;
     freezeFrame.height = ch;
     const ctx = freezeFrame.getContext("2d", { alpha:false });
-
-    const vw = video.videoWidth;
-    const vh = video.videoHeight;
-    const sourceAR = vw / vh;
-    const targetAR = cw / ch;
+    const vw = video.videoWidth, vh = video.videoHeight;
+    const sourceAR = vw / vh, targetAR = cw / ch;
     let sx = 0, sy = 0, sw = vw, sh = vh;
-
-    // 与 object-fit: cover 一致的裁切。
-    if (sourceAR > targetAR){
-      sw = vh * targetAR;
-      sx = (vw - sw) / 2;
-    } else {
-      sh = vw / targetAR;
-      sy = (vh - sh) / 2;
-    }
+    if (sourceAR > targetAR){ sw = vh * targetAR; sx = (vw - sw) / 2; }
+    else { sh = vw / targetAR; sy = (vh - sh) / 2; }
     ctx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch);
     freezeFrame.classList.add("show");
     video.classList.remove("visible");
     log("freeze frame", `${vw}x${vh}`, "=>", `${cw}x${ch}`);
     return true;
-  }catch(e){
-    log("freeze failed", e.name || e.message || e);
-    return false;
-  }
+  }catch(e){ log("freeze failed", e.name || e.message || e); return false; }
 }
 
 function updateDemoProgress(duration, token){
   const now = performance.now();
   const p = Math.min(1, (now - demoStart) / duration);
   progressFill.style.width = (p * 100).toFixed(1) + "%";
-  if (p < 1 && token === sceneToken){
-    raf = requestAnimationFrame(() => updateDemoProgress(duration, token));
-  }
+  if (p < 1 && token === sceneToken){ raf = requestAnimationFrame(() => updateDemoProgress(duration, token)); }
 }
 
 function fallbackToDemo(node, token, reason){
@@ -652,14 +493,12 @@ function fallbackToDemo(node, token, reason){
   hideFreeze();
   demoScene.classList.remove("hidden");
   transition.classList.remove("on");
-
   const duration = node.demoMs || DEMO_SCENE_MS;
   demoStart = performance.now();
   updateDemoProgress(duration, token);
   demoTimer = setTimeout(() => {
     if (token !== sceneToken) return;
-    if (node.ending) showEnding();
-    else showChoices(node);
+    if (node.ending) showEnding(); else showChoices(node);
   }, duration);
 }
 
@@ -668,11 +507,9 @@ function preloadNext(node){
   node.choices.forEach(choice => {
     const next = story[choice.next];
     if (!next || !next.video || preloadPool.has(next.video)) return;
-
     const pv = document.createElement("video");
     pv.preload = "auto";
-    pv.muted = true;
-    pv.playsInline = true;
+    pv.muted = true; pv.playsInline = true;
     pv.setAttribute("playsinline", "");
     pv.setAttribute("webkit-playsinline", "");
     pv.setAttribute("x5-playsinline", "true");
@@ -683,61 +520,24 @@ function preloadNext(node){
   });
 }
 
-function finishTransitionWhenPlaying(){
-  // 等一帧，让视频合成层先准备好，再退黑，减少 Android WebView 闪黑。
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    transition.classList.remove("on");
-  }));
-}
+function finishTransitionWhenPlaying(){ requestAnimationFrame(() => requestAnimationFrame(() => transition.classList.remove("on"))); }
 
 function beginNode(id){
-  // 注意：如果 beginNode 是由按钮 click 调用，它内部直到 video.play() 之间不能 await。
   stopScene();
   currentId = id;
   const node = story[id];
   const token = sceneToken;
-
-  hideChoices();
-  hideMediaGate();
-  endingCard.classList.remove("show");
-  progress.classList.add("show");
-  setCopy(node);
-  hideFreeze();
-
-  if (DEMO_MODE){
-    fallbackToDemo(node, token, "DEMO_MODE");
-    return;
-  }
-
+  hideChoices(); hideMediaGate(); endingCard.classList.remove("show"); progress.classList.add("show"); setCopy(node); hideFreeze();
+  if (DEMO_MODE){ fallbackToDemo(node, token, "DEMO_MODE"); return; }
   demoScene.classList.add("hidden");
   video.classList.remove("visible");
-  video.muted = muted;
-  video.controls = false;
-  video.setAttribute("playsinline", "");
-  video.setAttribute("webkit-playsinline", "");
-  video.setAttribute("x5-playsinline", "true");
+  video.muted = muted; video.controls = false;
+  video.setAttribute("playsinline", ""); video.setAttribute("webkit-playsinline", ""); video.setAttribute("x5-playsinline", "true");
 
-  video.onloadedmetadata = () => {
-    if (token !== sceneToken) return;
-    log("metadata", id, `${video.videoWidth}x${video.videoHeight}`, `duration=${video.duration.toFixed(2)}`);
-  };
-
-  video.ontimeupdate = () => {
-    if (token !== sceneToken || !video.duration) return;
-    progressFill.style.width = ((video.currentTime / video.duration) * 100).toFixed(2) + "%";
-  };
-
-  video.onwaiting = () => {
-    if (token !== sceneToken || !didStartPlaying) return;
-    showLoadingDelayed("网络有点慢，正在缓冲…");
-    log("waiting", id, video.currentTime.toFixed(2));
-  };
-
-  video.onstalled = () => {
-    if (token !== sceneToken) return;
-    log("stalled", id);
-  };
-
+  video.onloadedmetadata = () => { if (token !== sceneToken) return; log("metadata", id, `${video.videoWidth}x${video.videoHeight}`, `duration=${video.duration.toFixed(2)}`); };
+  video.ontimeupdate = () => { if (token !== sceneToken || !video.duration) return; progressFill.style.width = ((video.currentTime / video.duration) * 100).toFixed(2) + "%"; };
+  video.onwaiting = () => { if (token !== sceneToken || !didStartPlaying) return; showLoadingDelayed("网络有点慢，正在缓冲…"); log("waiting", id, video.currentTime.toFixed(2)); };
+  video.onstalled = () => { if (token !== sceneToken) return; log("stalled", id); };
   video.onplaying = () => {
     if (token !== sceneToken) return;
     didStartPlaying = true;
@@ -749,130 +549,64 @@ function beginNode(id){
     preloadNext(node);
     log("playing", id, `muted=${video.muted}`);
   };
-
   video.onended = () => {
     if (token !== sceneToken) return;
     log("ended", id);
     hideMediaGate();
     freezeCurrentFrame();
-    if (node.ending) showEnding();
-    else showChoices(node);
+    if (node.ending) showEnding(); else showChoices(node);
   };
-
   video.onerror = () => {
     if (token !== sceneToken) return;
     const code = video.error ? video.error.code : "unknown";
     log("video error", id, code, node.video);
-    if (ALLOW_DEMO_FALLBACK) fallbackToDemo(node, token, `video error ${code}`);
-    else showRetry("视频加载失败，轻触重试");
+    if (ALLOW_DEMO_FALLBACK) fallbackToDemo(node, token, `video error ${code}`); else showRetry("视频加载失败，轻触重试");
   };
 
-  // 关键：src / load / play 全部同步执行；play() 调用前没有任何 await / timer。
   video.src = node.video;
   try { video.load(); } catch (_) {}
   showLoadingDelayed("视频加载中…");
-
   let playPromise;
-  try{
-    playPromise = video.play();
-    log("play() invoked", id, node.video);
-  }catch(e){
-    log("play() throw", e.name || e.message || e);
-    showRetry("轻触继续播放");
-    return;
-  }
-
+  try{ playPromise = video.play(); log("play() invoked", id, node.video); }
+  catch(e){ log("play() throw", e.name || e.message || e); showRetry("轻触继续播放"); return; }
   if (playPromise && typeof playPromise.catch === "function"){
     playPromise.catch(err => {
       if (token !== sceneToken || didStartPlaying) return;
-      // AbortError 常见于快速切换 src，不当成 codec 错误；当前 token 仍一致才提示。
       log("play rejected", err && err.name, err && err.message);
       showRetry("轻触继续播放");
     });
   }
 }
 
-function choose(nextId){
-  // 先盖黑场，但绝不等待动画；立刻 beginNode -> play()。
-  hideChoices();
-  transition.classList.add("on");
-  beginNode(nextId);
-}
-
-function showEnding(){
-  progress.classList.remove("show");
-  sceneCopy.classList.remove("show");
-  setTimeout(() => endingCard.classList.add("show"), 180);
-}
-
-function updateMuteUI(){
-  muteBtn.textContent = muted ? "🔇" : "🔊";
-  video.muted = muted;
-}
+function choose(nextId){ hideChoices(); transition.classList.add("on"); beginNode(nextId); }
+function showEnding(){ progress.classList.remove("show"); sceneCopy.classList.remove("show"); setTimeout(() => endingCard.classList.add("show"), 180); }
+function updateMuteUI(){ muteBtn.textContent = muted ? "🔇" : "🔊"; video.muted = muted; }
 
 muteBtn.addEventListener("click", () => {
-  muted = !muted;
-  updateMuteUI();
+  muted = !muted; updateMuteUI();
   if (!video.paused) return;
-  // 静音键本身也是用户手势；若视频之前被策略拦截，可顺手重试。
   if (currentId && !choiceWrap.classList.contains("show") && !endingCard.classList.contains("show")){
-    const p = video.play();
-    if (p && p.catch) p.catch(() => {});
+    const p = video.play(); if (p && p.catch) p.catch(() => {});
   }
 });
-
 retryBtn.addEventListener("click", () => {
-  // 重试按钮必须直接调用 play()，不要在前面加异步。
-  mediaGate.classList.remove("retry");
-  mediaStatus.textContent = "正在继续播放…";
-  let p;
-  try{
-    p = video.play();
-    log("retry play() invoked", currentId);
-  }catch(e){
-    showRetry("还是没能播放，再点一次试试");
-    return;
-  }
-  if (p && p.catch){
-    p.catch(err => {
-      log("retry rejected", err && err.name, err && err.message);
-      showRetry("还是没能播放，再点一次试试");
-    });
-  }
+  mediaGate.classList.remove("retry"); mediaStatus.textContent = "正在继续播放…";
+  let p; try{ p = video.play(); log("retry play() invoked", currentId); }
+  catch(e){ showRetry("还是没能播放，再点一次试试"); return; }
+  if (p && p.catch){ p.catch(err => { log("retry rejected", err && err.name, err && err.message); showRetry("还是没能播放，再点一次试试"); }); }
 });
-
-startBtn.addEventListener("click", () => {
-  // 这是最重要的用户手势。不要 await！
-  startScreen.classList.add("hide");
-  topbar.classList.add("show");
-  transition.classList.add("on");
-  beginNode("intro");
-});
-
-restartBtn.addEventListener("click", () => {
-  transition.classList.add("on");
-  beginNode("intro");
-});
+startBtn.addEventListener("click", () => { startScreen.classList.add("hide"); topbar.classList.add("show"); transition.classList.add("on"); beginNode("intro"); });
+restartBtn.addEventListener("click", () => { transition.classList.add("on"); beginNode("intro"); });
 
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden){
-    try { video.pause(); } catch (_) {}
-    return;
-  }
+  if (document.hidden){ try { video.pause(); } catch (_) {} return; }
   if (!currentId || choiceWrap.classList.contains("show") || endingCard.classList.contains("show")) return;
-  // 从微信聊天切回来时可能失去自动播放权限；先尝试，失败就显示自定义按钮。
-  try{
-    const p = video.play();
-    if (p && p.catch) p.catch(() => showRetry("轻触继续播放"));
-  }catch(_){
-    showRetry("轻触继续播放");
-  }
+  try{ const p = video.play(); if (p && p.catch) p.catch(() => showRetry("轻触继续播放")); }
+  catch(_){ showRetry("轻触继续播放"); }
 });
+window.addEventListener("pageshow", e => { if (e.persisted) log("restored from bfcache"); });
 
-window.addEventListener("pageshow", e => {
-  if (e.persisted) log("restored from bfcache");
-});
-
+initProjectText();
 log("build", BUILD_ID, navigator.userAgent);
 </script>
 </body>
