@@ -1,1147 +1,619 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>冯先生 & 熊女士｜婚礼答谢宴邀请函</title>
-  <meta name="description" content="冯先生与熊女士婚礼答谢宴邀请函，诚挚邀请您出席我们的甜美 Lolita 风答谢宴。" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#05070a" />
+  <title>Wedding Live · Maldives</title>
   <style>
-    :root {
-      --bg: #fff7fb;
-      --bg-soft: #fffdfd;
-      --card: rgba(255,255,255,0.78);
-      --text: #6f4d5e;
-      --text-soft: #8f6b7b;
-      --pink: #f9d7e5;
-      --pink-mid: #f3b6cb;
-      --pink-deep: #db88aa;
-      --pink-strong: #c96f95;
-      --gold: #ebccb0;
-      --gold-deep: #d9b08f;
-      --line: rgba(217, 135, 167, 0.18);
-      --white-line: rgba(255,255,255,0.78);
-      --shadow: 0 24px 70px rgba(209, 132, 167, 0.18);
-      --shadow-soft: 0 10px 35px rgba(217,135,167,0.10);
-      --radius-xl: 34px;
-      --radius-lg: 26px;
-      --radius-md: 20px;
+    :root{
+      --ui-pad: max(18px, env(safe-area-inset-left));
+      --bottom-safe: max(18px, env(safe-area-inset-bottom));
+      --ease: cubic-bezier(.2,.72,.2,1);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      width:100%; height:100%; margin:0; background:#05070a; color:#fff;
+      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Inter,system-ui,sans-serif;
+      overflow:hidden;
+    }
+    button{font:inherit}
+    body{
+      display:flex; align-items:center; justify-content:center;
+    }
+    #app{
+      position:relative;
+      width:100vw; height:100dvh;
+      overflow:hidden; background:#05070a;
+      isolation:isolate;
+    }
+    @media (min-width:700px){
+      #app{
+        width:min(430px, 100vw);
+        height:min(932px, 100dvh);
+        border-radius:28px;
+        box-shadow:0 30px 90px rgba(0,0,0,.55);
+      }
+      body::before{
+        content:""; position:fixed; inset:0;
+        background:radial-gradient(circle at 50% 30%, #15202b 0%, #05070a 58%);
+      }
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    /* Real video layer */
+    #video{
+      position:absolute; inset:0; width:100%; height:100%;
+      object-fit:cover; opacity:0; transition:opacity .35s ease;
+      background:#000;
+    }
+    #video.visible{opacity:1}
 
-    body {
-      margin: 0;
-      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
-      color: var(--text);
+    /* Demo placeholder scene */
+    #demoScene{
+      position:absolute; inset:-5%;
+      opacity:1; transition:opacity .35s ease;
+      overflow:hidden;
+      transform:scale(1.04);
+    }
+    #demoScene.hidden{opacity:0}
+    .scene-bg{
+      position:absolute; inset:0;
       background:
-        radial-gradient(circle at 0% 0%, rgba(255, 214, 231, 0.58), transparent 24%),
-        radial-gradient(circle at 100% 0%, rgba(255, 231, 241, 0.62), transparent 24%),
-        radial-gradient(circle at 50% 100%, rgba(255, 237, 245, 0.85), transparent 34%),
-        linear-gradient(180deg, #fffafd 0%, #fff3f9 50%, #fff9fc 100%);
-      overflow-x: hidden;
+        radial-gradient(circle at 68% 22%, rgba(255,244,210,.75), transparent 22%),
+        linear-gradient(180deg, #7fc8d7 0%, #7bd0d2 32%, #1e8ea2 52%, #063847 72%, #071016 100%);
+      animation:drift 10s ease-in-out infinite alternate;
     }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px),
-        radial-gradient(rgba(255,214,231,0.45) 1px, transparent 1px);
-      background-size: 22px 22px, 38px 38px;
-      background-position: 0 0, 12px 8px;
-      opacity: 0.25;
-      z-index: 0;
+    .scene-bg::before{
+      content:""; position:absolute; left:-15%; right:-15%; top:48%; height:14%;
+      background:linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.12));
+      filter:blur(7px); transform:skewY(-2deg);
+      opacity:.55;
     }
-
-    a { color: inherit; }
-
-    .page-shell {
-      position: relative;
-      z-index: 1;
-    }
-
-    .floating-charm {
-      position: fixed;
-      top: 16px;
-      width: 92px;
-      height: 140px;
-      pointer-events: none;
-      opacity: 0.65;
-      z-index: 15;
-    }
-
-    .floating-charm.left { left: 10px; }
-    .floating-charm.right { right: 10px; transform: scaleX(-1); }
-
-    .floating-charm::before,
-    .floating-charm::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .floating-charm::before {
-      top: 0;
-      width: 2px;
-      height: 82px;
-      background: linear-gradient(180deg, rgba(235,204,176,0), rgba(235,204,176,0.9));
-    }
-
-    .floating-charm::after {
-      top: 74px;
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
+    .scene-bg::after{
+      content:""; position:absolute; left:-10%; right:-10%; bottom:-2%; height:36%;
       background:
-        radial-gradient(circle at 35% 35%, #fff, #ffd6e5 55%, #f3b6cb 100%);
-      box-shadow: 0 8px 20px rgba(217,135,167,0.16);
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.16), transparent 28%),
+        linear-gradient(180deg, #d8c395 0%, #a88658 65%, #5f4935 100%);
+      transform:rotate(-2deg);
+    }
+    @keyframes drift{
+      from{transform:scale(1.02) translate3d(-1.5%,0,0)}
+      to{transform:scale(1.08) translate3d(1.5%,-1%,0)}
     }
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 12;
-      padding: 14px 16px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      background: linear-gradient(180deg, rgba(255,250,252,0.90), rgba(255,250,252,0.68));
-      border-bottom: 1px solid rgba(255,255,255,0.76);
+    .palm{
+      position:absolute; width:18px; height:58%; background:#3b281e;
+      left:10%; bottom:18%; transform:rotate(8deg); border-radius:999px;
+      filter:drop-shadow(0 14px 18px rgba(0,0,0,.18));
+      opacity:.72;
+    }
+    .palm::before{
+      content:""; position:absolute; width:170px; height:85px; left:-68px; top:-20px;
+      background:conic-gradient(from 10deg,
+        transparent 0 10deg,#274a34 11deg 25deg,transparent 26deg 42deg,
+        #315f42 43deg 58deg,transparent 59deg 76deg,#24432f 77deg 94deg,
+        transparent 95deg 115deg,#39694b 116deg 132deg,transparent 133deg 152deg,
+        #2e563c 153deg 170deg,transparent 171deg 360deg);
+      border-radius:50%;
+      transform:rotate(-6deg);
+    }
+    .arch{
+      position:absolute; left:50%; bottom:23%; width:50%; height:31%;
+      transform:translateX(-50%);
+      border:6px solid rgba(255,255,255,.88);
+      border-bottom:0;
+      border-radius:120px 120px 0 0;
+      box-shadow:0 8px 30px rgba(0,0,0,.12);
+    }
+    .arch::before,.arch::after{
+      content:""; position:absolute; width:48px; height:48px; border-radius:50%;
+      background:radial-gradient(circle, #fff 0 18%, #ffd9d9 19% 33%, #f5f0d8 34% 52%, transparent 54%);
+    }
+    .arch::before{left:-28px; top:34%}
+    .arch::after{right:-28px; top:18%}
+
+    .silhouette{
+      position:absolute; bottom:20.5%; width:10%; height:18%;
+      border-radius:45% 45% 14% 14%;
+      background:linear-gradient(#25282b,#101214);
+      filter:drop-shadow(0 10px 10px rgba(0,0,0,.25));
+      opacity:.92;
+    }
+    .silhouette::before{
+      content:""; position:absolute; width:52%; aspect-ratio:1; border-radius:50%;
+      background:#181b1d; top:-28%; left:24%;
+    }
+    .silhouette.left{left:41%}
+    .silhouette.right{right:40%; transform:scaleX(.92)}
+    .guest{
+      position:absolute; bottom:19%; left:15%; width:8%; height:15%;
+      border-radius:45% 45% 15% 15%;
+      background:#202529; opacity:.88;
+    }
+    .guest::before{
+      content:""; position:absolute; width:50%; aspect-ratio:1; border-radius:50%;
+      background:#202529; left:25%; top:-24%;
     }
 
-    .topbar-inner {
-      width: min(1100px, 100%);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: rgba(255,255,255,0.46);
-      border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 999px;
-      padding: 10px 14px;
-      box-shadow: 0 8px 26px rgba(217,135,167,0.08);
-    }
-
-    .brand {
-      font-size: 14px;
-      letter-spacing: 0.14em;
-      color: var(--pink-strong);
-      white-space: nowrap;
-    }
-
-    .nav {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .nav a {
-      text-decoration: none;
-      font-size: 13px;
-      color: var(--text-soft);
-      padding: 8px 12px;
-      border-radius: 999px;
-      transition: background .2s ease, color .2s ease, transform .2s ease;
-    }
-
-    .nav a:hover {
-      background: rgba(243,182,203,0.18);
-      color: var(--pink-strong);
-      transform: translateY(-1px);
-    }
-
-    .hero {
-      min-height: calc(100vh - 74px);
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 34px 18px 42px;
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url("./assets/invitation.png") center 18% / cover no-repeat;
-      transform: scale(1.08);
-      filter: brightness(0.82) saturate(1.05);
-      z-index: -3;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
+    .film{
+      position:absolute; inset:0; pointer-events:none;
       background:
-        linear-gradient(180deg, rgba(255,249,252,0.30), rgba(255,247,250,0.82) 58%, rgba(255,248,251,0.95) 100%),
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.18), transparent 36%);
-      backdrop-filter: blur(5px);
-      z-index: -2;
+        linear-gradient(180deg, rgba(0,0,0,.26) 0%, transparent 24%, transparent 64%, rgba(0,0,0,.58) 100%),
+        radial-gradient(circle at 50% 44%, transparent 42%, rgba(0,0,0,.18) 100%);
+      z-index:4;
+    }
+    .grain{
+      position:absolute; inset:0; z-index:5; pointer-events:none; opacity:.055;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+      animation:noise .2s steps(2) infinite;
+    }
+    @keyframes noise{
+      0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(2%,2%)} 100%{transform:translate(-1%,-1%)}
     }
 
-    .hero-ornament {
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 62%);
-      filter: blur(6px);
-      z-index: -1;
-      pointer-events: none;
+    .scene-copy{
+      position:absolute; left:var(--ui-pad); right:var(--ui-pad); top:max(24px, env(safe-area-inset-top));
+      z-index:8; opacity:0; transform:translateY(8px);
+      transition:.6s var(--ease); text-shadow:0 2px 18px rgba(0,0,0,.45);
+      pointer-events:none;
+    }
+    .scene-copy.show{opacity:1; transform:translateY(0)}
+    .eyebrow{
+      font-size:11px; letter-spacing:.26em; text-transform:uppercase; opacity:.72; margin-bottom:7px;
+    }
+    .scene-title{
+      font-size:25px; line-height:1.2; font-weight:650; letter-spacing:.02em;
+    }
+    .scene-sub{
+      margin-top:8px; max-width:80%; font-size:14px; line-height:1.55; opacity:.82;
     }
 
-    .hero-ornament.left { left: -30px; bottom: 50px; }
-    .hero-ornament.right { right: -10px; top: 90px; }
-
-    .hero-card {
-      width: min(860px, 100%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.84), rgba(255,247,250,0.76));
-      border: 1px solid rgba(255,255,255,0.76);
-      box-shadow: var(--shadow);
-      border-radius: 36px;
-      padding: 54px 38px 42px;
-      text-align: center;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      position: relative;
-      overflow: hidden;
+    .topbar{
+      position:absolute; z-index:20; top:max(12px, env(safe-area-inset-top)); right:14px;
+      display:flex; gap:8px; opacity:0; transition:.3s ease;
+    }
+    .topbar.show{opacity:1}
+    .icon-btn{
+      width:38px; height:38px; border:1px solid rgba(255,255,255,.18);
+      border-radius:999px; color:#fff; background:rgba(0,0,0,.20);
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     }
 
-    .hero-card::before,
-    .hero-card::after {
-      content: "";
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(243,182,203,0.24), transparent 70%);
-      pointer-events: none;
+    .progress{
+      position:absolute; z-index:18; left:18px; right:18px; top:max(10px, env(safe-area-inset-top));
+      height:2px; background:rgba(255,255,255,.16); opacity:0; transition:.3s;
+      overflow:hidden; border-radius:999px;
+    }
+    .progress.show{opacity:1}
+    .progress > i{
+      display:block; width:0%; height:100%; background:#fff; opacity:.75;
+      transition:width .15s linear;
     }
 
-    .hero-card::before { left: -40px; top: -40px; }
-    .hero-card::after { right: -40px; bottom: -40px; }
+    .choice-wrap{
+      position:absolute; z-index:30; left:0; right:0; bottom:0;
+      padding:26px 18px calc(var(--bottom-safe) + 12px);
+      background:linear-gradient(180deg, transparent, rgba(3,7,10,.52) 26%, rgba(3,7,10,.82) 100%);
+      opacity:0; transform:translateY(24px); pointer-events:none;
+      transition:.45s var(--ease);
+    }
+    .choice-wrap.show{
+      opacity:1; transform:translateY(0); pointer-events:auto;
+    }
+    .choice-hint{
+      text-align:center; font-size:12px; letter-spacing:.18em; opacity:.65; margin-bottom:12px;
+    }
+    .choices{display:grid; gap:10px}
+    .choice-btn{
+      min-height:58px; width:100%; padding:14px 18px; border-radius:18px;
+      border:1px solid rgba(255,255,255,.24);
+      background:rgba(8,14,18,.44); color:#fff; font-size:16px; font-weight:600;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 30px rgba(0,0,0,.16);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      transition:transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+    .choice-btn:active{
+      transform:scale(.975); background:rgba(255,255,255,.17); border-color:rgba(255,255,255,.48);
+    }
 
-    .lace {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 30px;
-      opacity: 0.9;
-      pointer-events: none;
+    .start{
+      position:absolute; inset:0; z-index:60; display:flex; flex-direction:column;
+      align-items:center; justify-content:flex-end; text-align:center;
+      padding:40px 24px calc(var(--bottom-safe) + 40px);
       background:
-        radial-gradient(circle at 15px 0, rgba(255,255,255,0.96) 14px, transparent 15px) repeat-x;
-      background-size: 30px 30px;
-      z-index: 3;
-    }
-
-    .lace.top { top: 0; }
-    .lace.bottom { bottom: 0; transform: rotate(180deg); }
-
-    .mini-bow {
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 70px;
-      height: 42px;
-      z-index: 4;
-      pointer-events: none;
-    }
-
-    .mini-bow::before,
-    .mini-bow::after,
-    .mini-bow span {
-      content: "";
-      position: absolute;
-      top: 8px;
-      width: 28px;
-      height: 22px;
-      background: linear-gradient(180deg, #ffd7e6, #f3b6cb);
-      border-radius: 20px 20px 20px 6px;
-      box-shadow: 0 8px 18px rgba(217,135,167,0.14);
-    }
-
-    .mini-bow::before { left: 2px; transform: rotate(12deg); }
-    .mini-bow::after { right: 2px; transform: scaleX(-1) rotate(12deg); }
-    .mini-bow span {
-      left: 50%;
-      top: 10px;
-      width: 14px;
-      height: 18px;
-      transform: translateX(-50%);
-      border-radius: 8px;
-      background: linear-gradient(180deg, #f7c5d8, #eaa8c4);
-    }
-
-    .ribbon-corner {
-      position: absolute;
-      top: 16px;
-      width: 92px;
-      height: 92px;
-      z-index: 4;
-      pointer-events: none;
-    }
-
-    .ribbon-corner::before,
-    .ribbon-corner::after {
-      content: "";
-      position: absolute;
-      background: linear-gradient(180deg, #f8cade, #efadc7);
-      border-radius: 14px;
-      box-shadow: 0 8px 20px rgba(217,135,167,0.18);
-    }
-
-    .ribbon-corner::before {
-      width: 70px;
-      height: 24px;
-      left: 10px;
-      top: 26px;
-      transform: rotate(38deg);
-    }
-
-    .ribbon-corner::after {
-      width: 70px;
-      height: 24px;
-      left: 10px;
-      top: 26px;
-      transform: rotate(-38deg);
-    }
-
-    .ribbon-left { left: 12px; }
-    .ribbon-right { right: 12px; transform: scaleX(-1); }
-
-    .eyebrow {
-      letter-spacing: 0.30em;
-      font-size: 12px;
-      color: var(--pink-deep);
-      margin: 8px 0 18px;
-      text-transform: uppercase;
-      position: relative;
-      z-index: 5;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(34px, 7vw, 68px);
-      line-height: 1.12;
-      font-weight: 500;
-      color: var(--pink-strong);
-      text-shadow: 0 2px 10px rgba(255,255,255,0.55);
-      position: relative;
-      z-index: 5;
-    }
-
-    .hero-kicker {
-      margin-top: 8px;
-      font-size: 16px;
-      color: var(--pink-deep);
-      letter-spacing: 0.08em;
-      position: relative;
-      z-index: 5;
-    }
-
-    .divider {
-      width: 136px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--pink-deep), transparent);
-      margin: 24px auto;
-      position: relative;
-      z-index: 5;
-    }
-
-    .divider::after {
-      content: "🎀";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -54%);
-      font-size: 16px;
-      background: rgba(255,249,252,0.92);
-      padding: 0 8px;
-    }
-
-    .subtitle {
-      margin: 18px auto 0;
-      font-size: 18px;
-      line-height: 1.95;
-      max-width: 620px;
-      position: relative;
-      z-index: 5;
-    }
-
-    .couple-wrap {
-      display: inline-flex;
-      align-items: center;
-      gap: 16px;
-      margin-top: 28px;
-      padding: 14px 24px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.62);
-      border: 1px solid rgba(255,255,255,0.76);
-      box-shadow: 0 8px 24px rgba(217,135,167,0.08);
-      position: relative;
-      z-index: 5;
-    }
-
-    .couple {
-      font-size: clamp(22px, 4vw, 34px);
-      letter-spacing: 0.08em;
-    }
-
-    .heart-dot {
-      color: var(--pink-deep);
-      font-size: 20px;
-      transform: translateY(-1px);
-    }
-
-    .hero-meta {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 28px;
-      position: relative;
-      z-index: 5;
-    }
-
-    .meta-pill {
-      padding: 14px 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.60);
-      border: 1px solid rgba(255,255,255,0.75);
-      box-shadow: var(--shadow-soft);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .meta-pill strong {
-      display: block;
-      color: var(--pink-strong);
-      font-size: 13px;
-      letter-spacing: 0.12em;
-      margin-bottom: 4px;
-      font-weight: 600;
-    }
-
-    .actions {
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 28px;
-      position: relative;
-      z-index: 5;
-    }
-
-    .btn {
-      appearance: none;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      padding: 14px 22px;
-      border-radius: 999px;
-      font-size: 15px;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
-    }
-
-    .btn:hover { transform: translateY(-2px); }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--pink-deep) 0%, #f3b6cb 100%);
-      color: white;
-      box-shadow: 0 10px 30px rgba(217, 135, 167, 0.28);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.76);
-      color: var(--pink-strong);
-      border: 1px solid rgba(217, 135, 167, 0.26);
-    }
-
-    .btn-ghost {
-      background: rgba(255,247,251,0.72);
-      color: var(--text-soft);
-      border: 1px dashed rgba(217, 135, 167, 0.30);
-    }
-
-    .section {
-      padding: 84px 18px;
-      position: relative;
-    }
-
-    .section::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      width: min(1120px, calc(100% - 36px));
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(217,135,167,0.20), transparent);
-    }
-
-    .container {
-      width: min(1100px, 100%);
-      margin: 0 auto;
-    }
-
-    .section-tag {
-      text-align: center;
-      color: var(--pink-deep);
-      letter-spacing: 0.24em;
-      font-size: 12px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: clamp(28px, 4vw, 42px);
-      color: var(--pink-strong);
-      margin: 0 0 12px;
-      font-weight: 500;
-    }
-
-    .section-desc {
-      text-align: center;
-      max-width: 760px;
-      margin: 0 auto 42px;
-      line-height: 1.95;
-      font-size: 16px;
-      color: var(--text-soft);
-    }
-
-    .story-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,248,251,0.82));
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      padding: 34px 26px;
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 28px;
-    }
-
-    .story-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto auto 0;
-      width: 100%;
-      height: 6px;
-      background: linear-gradient(90deg, #fbe4ee, #f3b6cb, #fbe4ee);
-    }
-
-    .story-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .story-copy h3,
-    .poster-copy h3 {
-      margin: 0 0 12px;
-      color: var(--pink-strong);
-      font-size: 28px;
-      font-weight: 500;
-    }
-
-    .story-copy p,
-    .poster-copy p {
-      margin: 0;
-      line-height: 1.95;
-      color: var(--text-soft);
-      font-size: 16px;
-    }
-
-    .story-badges {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .badge {
-      padding: 9px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(217,135,167,0.20);
-      font-size: 13px;
-      color: var(--pink-strong);
-    }
-
-    .story-visual {
-      position: relative;
-      min-height: 300px;
-      border-radius: 30px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.7);
-      box-shadow: 0 12px 32px rgba(217,135,167,0.10);
-      background:
-        linear-gradient(180deg, rgba(255,246,250,0.72), rgba(255,239,246,0.88)),
-        url("./assets/invitation.png") center/cover no-repeat;
-    }
-
-    .story-visual::before,
-    .story-visual::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.54), transparent 70%);
-      pointer-events: none;
-    }
-
-    .story-visual::before { width: 180px; height: 180px; top: -40px; right: -10px; }
-    .story-visual::after { width: 140px; height: 140px; bottom: -20px; left: -20px; }
-
-    .story-quote {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
-      padding: 18px 16px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.74);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.7);
-      box-shadow: var(--shadow-soft);
-      font-size: 15px;
-      line-height: 1.8;
-      color: var(--text-soft);
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
-
-    .info-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,247,250,0.87));
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 28px 20px 24px;
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-      text-align: center;
-    }
-
-    .info-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto auto 0;
-      width: 100%;
-      height: 6px;
-      background: linear-gradient(90deg, #f8d3e1, #f3b6cb, #f8d3e1);
-      opacity: 0.85;
-    }
-
-    .info-icon {
-      width: 54px;
-      height: 54px;
-      margin: 0 auto 14px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,236,244,0.85));
-      color: var(--pink-strong);
-      box-shadow: 0 8px 22px rgba(217,135,167,0.10);
-      font-size: 24px;
-    }
-
-    .info-label {
-      font-size: 13px;
-      color: var(--pink-deep);
-      letter-spacing: 0.16em;
-      margin-bottom: 14px;
-    }
-
-    .info-main {
-      font-size: 22px;
-      margin-bottom: 10px;
-      font-weight: 500;
-      color: var(--pink-strong);
-    }
-
-    .info-sub {
-      line-height: 1.9;
-      font-size: 15px;
-      color: var(--text-soft);
-    }
-
-    .dress-section .poster-layout {
-      display: grid;
-      grid-template-columns: 0.92fr 1.08fr;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .poster-copy {
-      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,247,250,0.84));
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      padding: 30px 26px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .poster-points {
-      margin: 20px 0 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 10px;
-    }
-
-    .poster-points li {
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(217,135,167,0.18);
-      color: var(--text-soft);
-    }
-
-    .gallery-box {
-      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,245,249,0.86));
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      padding: 18px;
-      box-shadow: 0 16px 40px rgba(217,135,167,0.10);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .gallery-box::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(180deg, rgba(255,255,255,0.14), transparent 26%);
-    }
-
-    .gallery-box img {
-      width: 100%;
-      display: block;
-      border-radius: 22px;
-      object-fit: cover;
-      box-shadow: 0 10px 30px rgba(217,135,167,0.12);
-    }
-
-    .cta-box {
-      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,244,249,0.88));
-      border: 1px solid var(--line);
-      border-radius: 36px;
-      padding: 36px 24px;
-      text-align: center;
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-box::before,
-    .cta-box::after {
-      content: "";
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(243,182,203,0.18), transparent 68%);
-      pointer-events: none;
-    }
-
-    .cta-box::before { left: -40px; top: -80px; }
-    .cta-box::after { right: -40px; bottom: -90px; }
-
-    .cta-title {
-      margin: 0;
-      font-size: clamp(30px, 4vw, 46px);
-      color: var(--pink-strong);
-      font-weight: 500;
-    }
-
-    .cta-sub {
-      margin: 16px auto 0;
-      max-width: 760px;
-      line-height: 1.95;
-      color: var(--text-soft);
-      font-size: 16px;
-    }
-
-    .cta-actions {
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 24px;
-    }
-
-    .wechat-tip {
-      margin-top: 18px;
-      font-size: 13px;
-      color: #b28399;
-    }
-
-    .footer {
-      padding: 28px 20px 70px;
-      text-align: center;
-      color: #a5798f;
-      font-size: 14px;
-    }
-
-    .footer-line {
-      width: 140px;
-      height: 1px;
-      margin: 0 auto 16px;
-      background: linear-gradient(90deg, transparent, rgba(217,135,167,0.32), transparent);
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity .8s ease, transform .8s ease;
-    }
-
-    .reveal.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .floating-petal {
-      position: fixed;
-      top: -40px;
-      width: 18px;
-      height: 18px;
-      border-radius: 70% 30% 70% 30%;
-      background: radial-gradient(circle at 30% 30%, #fff7fa 0%, #ffd7e6 55%, #f3b6cb 100%);
-      opacity: .55;
-      pointer-events: none;
-      z-index: 20;
-      animation: fall linear forwards;
-      filter: blur(.2px);
-    }
-
-    @keyframes fall {
-      0% { transform: translate3d(0, -40px, 0) rotate(0deg); }
-      100% { transform: translate3d(var(--drift), 110vh, 0) rotate(360deg); }
-    }
-
-    @media (max-width: 980px) {
-      .story-grid,
-      .dress-section .poster-layout,
-      .info-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .story-grid { grid-template-columns: 1fr; }
-      .dress-section .poster-layout { grid-template-columns: 1fr; }
-      .hero-meta { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 720px) {
-      .floating-charm { display: none; }
-      .topbar { padding: 10px 10px; }
-      .topbar-inner {
-        border-radius: 24px;
-        padding: 12px;
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .brand { text-align: center; }
-      .nav {
-        justify-content: center;
-        gap: 4px;
-      }
-      .nav a {
-        font-size: 12px;
-        padding: 7px 10px;
-      }
-      .hero {
-        min-height: auto;
-        padding: 18px 12px 28px;
-      }
-      .hero::before {
-        background-position: center top;
-      }
-      .hero-card {
-        padding: 48px 18px 28px;
-        border-radius: 26px;
-      }
-      .subtitle {
-        font-size: 15px;
-        line-height: 1.85;
-      }
-      .couple-wrap {
-        width: 100%;
-        justify-content: center;
-        gap: 10px;
-        padding: 12px 14px;
-      }
-      .couple {
-        font-size: 24px;
-      }
-      .hero-meta,
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-      .section {
-        padding: 58px 12px;
-      }
-      .section-desc {
-        font-size: 15px;
-        margin-bottom: 30px;
-      }
-      .story-card,
-      .poster-copy,
-      .cta-box {
-        padding: 24px 16px;
-        border-radius: 24px;
-      }
-      .story-copy h3,
-      .poster-copy h3 {
-        font-size: 24px;
-      }
-      .story-visual {
-        min-height: 250px;
-      }
-      .gallery-box {
-        padding: 12px;
-        border-radius: 22px;
-      }
-      .gallery-box img {
-        border-radius: 16px;
-      }
-      .actions,
-      .cta-actions {
-        gap: 10px;
-      }
-      .btn {
-        width: 100%;
-        text-align: center;
-      }
-      .mini-bow,
-      .ribbon-corner {
-        transform: scale(0.82);
-      }
-      .ribbon-right { transform: scaleX(-1) scale(0.82); }
+        linear-gradient(180deg, rgba(0,0,0,.03) 0%, rgba(0,0,0,.08) 48%, rgba(0,0,0,.66) 100%),
+        radial-gradient(circle at 64% 22%, rgba(255,245,218,.94), transparent 18%),
+        linear-gradient(180deg,#8fd2df 0%,#59bdc5 39%,#12859a 58%,#0c2833 100%);
+      transition:opacity .55s ease, visibility .55s;
+    }
+    .start.hide{opacity:0; visibility:hidden}
+    .start::after{
+      content:""; position:absolute; left:-10%; right:-10%; bottom:0; height:35%;
+      background:linear-gradient(180deg,#dcc79a,#a98d62); transform:rotate(-2deg); z-index:-1;
+    }
+    .start-kicker{font-size:11px; letter-spacing:.34em; opacity:.78; margin-bottom:12px}
+    .start h1{margin:0; font-family:Georgia,"Times New Roman",serif; font-size:42px; font-weight:500; letter-spacing:.02em}
+    .start p{margin:10px 0 26px; font-size:14px; opacity:.8}
+    .start-btn{
+      width:min(290px,82vw); height:58px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.42); color:#fff; font-size:15px; font-weight:650;
+      background:rgba(10,18,22,.26);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      box-shadow:0 14px 40px rgba(0,0,0,.20);
+    }
+
+    .transition{
+      position:absolute; inset:0; z-index:55; background:#020406;
+      opacity:0; pointer-events:none; transition:opacity .32s ease;
+    }
+    .transition.on{opacity:1}
+
+    .ending-card{
+      position:absolute; inset:0; z-index:42; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; text-align:center; padding:34px;
+      background:rgba(2,4,6,.46);
+      backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+      opacity:0; pointer-events:none; transition:.7s ease;
+    }
+    .ending-card.show{opacity:1; pointer-events:auto}
+    .ending-card small{letter-spacing:.34em; opacity:.68}
+    .ending-card h2{
+      font-family:Georgia,"Times New Roman",serif; font-size:42px; font-weight:500;
+      margin:12px 0 4px;
+    }
+    .ending-card p{margin:0 0 28px; opacity:.78}
+    .restart{
+      min-width:180px; height:50px; border-radius:999px; color:#fff;
+      border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.10);
+    }
+
+    .rotate-note{
+      display:none;
+      position:absolute; inset:0; z-index:90; background:#05070a;
+      align-items:center; justify-content:center; text-align:center; padding:30px;
+    }
+    @media (orientation:landscape) and (max-height:600px){
+      .rotate-note{display:flex}
     }
   </style>
 </head>
 <body>
-  <div class="page-shell">
-    <div class="floating-charm left"></div>
-    <div class="floating-charm right"></div>
+  <main id="app">
+    <video id="video" playsinline webkit-playsinline preload="auto"></video>
 
-    <header class="topbar">
-      <div class="topbar-inner">
-        <div class="brand">Sweet Lolita Wedding</div>
-        <nav class="nav">
-          <a href="#hero">首页</a>
-          <a href="#story">答谢信息</a>
-          <a href="#details">宴会安排</a>
-          <a href="#poster">邀请函海报</a>
-          <a href="#rsvp">温馨提示</a>
-        </nav>
-      </div>
-    </header>
-
-    <section class="hero" id="hero">
-      <div class="hero-ornament left"></div>
-      <div class="hero-ornament right"></div>
-      <div class="lace top"></div>
-      <div class="lace bottom"></div>
-      <div class="ribbon-corner ribbon-left"></div>
-      <div class="ribbon-corner ribbon-right"></div>
-      <div class="hero-card reveal show">
-        <div class="mini-bow"><span></span></div>
-        <div class="eyebrow">Sweet Lolita Wedding Thank You Party</div>
-        <h1>婚礼答谢宴邀请函</h1>
-        <div class="hero-kicker">粉白梦幻 · 甜美赴约 · 温柔见证</div>
-        <div class="divider"></div>
-        <p class="subtitle">
-          一路走来，感谢有您见证我们的幸福时刻。<br />
-          诚挚邀请您出席我们的婚礼答谢宴，和我们一起分享这份甜蜜、温柔、梦幻的喜悦。
-        </p>
-        <div class="couple-wrap">
-          <div class="couple">冯先生</div>
-          <div class="heart-dot">❤</div>
-          <div class="couple">熊女士</div>
-        </div>
-
-        <div class="hero-meta">
-          <div class="meta-pill"><strong>时间</strong>2026年6月15日<br />18:00 签到 · 18:30 开席</div>
-          <div class="meta-pill"><strong>地点</strong>幸福大酒店 3楼宴会厅<br />XX市XX区XX路88号</div>
-          <div class="meta-pill"><strong>主题</strong>婚礼答谢宴<br />Lolita甜美风邀请页</div>
-        </div>
-
-        <div class="actions">
-          <a class="btn btn-primary" href="#details">查看宴会信息</a>
-          <a class="btn btn-secondary" href="#poster">查看邀请函海报</a>
-          <a class="btn btn-ghost" href="#rsvp">微信预览建议</a>
-        </div>
-      </div>
+    <section id="demoScene" aria-hidden="true">
+      <div class="scene-bg"></div>
+      <div class="palm"></div>
+      <div class="arch"></div>
+      <div class="silhouette left"></div>
+      <div class="silhouette right"></div>
+      <div class="guest"></div>
     </section>
 
-    <main>
-      <section class="section" id="story">
-        <div class="container">
-          <div class="section-tag reveal">Invitation Story</div>
-          <h2 class="section-title reveal">一封更有仪式感的答谢邀请</h2>
-          <p class="section-desc reveal">
-            这一页不是普通通知，而是我们专门准备的一张线上邀请函。
-            我们把粉色、蕾丝、蝴蝶结和梦幻的 Lolita 元素放进来，希望你点开链接的那一刻，就能感受到这份认真与甜意。
-          </p>
+    <div class="film"></div>
+    <div class="grain"></div>
 
-          <div class="story-card reveal">
-            <div class="story-grid">
-              <div class="story-copy">
-                <h3>答谢，不只是吃一顿饭</h3>
-                <p>
-                  它更像是一场温柔的再相聚。感谢一路陪伴我们的家人、朋友和亲友，
-                  感谢你们见证我们的相识、相爱与走向新的生活。我们希望把这次答谢宴，
-                  做成一场带着甜美少女感和精致仪式感的小小庆典。
-                </p>
-                <div class="story-badges">
-                  <span class="badge">粉白奶油色</span>
-                  <span class="badge">蝴蝶结与蕾丝</span>
-                  <span class="badge">手机打开更好看</span>
-                  <span class="badge">适合微信分享</span>
-                </div>
-              </div>
-              <div class="story-visual">
-                <div class="story-quote">
-                  “希望你打开这张邀请函时，看到的不只是信息，
-                  而是一份被认真准备过的幸福感。”
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div class="scene-copy" id="sceneCopy">
+      <div class="eyebrow" id="eyebrow"></div>
+      <div class="scene-title" id="sceneTitle"></div>
+      <div class="scene-sub" id="sceneSub"></div>
+    </div>
 
-      <section class="section" id="details">
-        <div class="container">
-          <div class="section-tag reveal">Party Details</div>
-          <h2 class="section-title reveal">宴会安排</h2>
-          <p class="section-desc reveal">
-            为了方便大家查看，我们把最重要的时间、地点和赴约信息整理成了更适合手机阅读的卡片。
-          </p>
+    <div class="progress" id="progress"><i id="progressFill"></i></div>
 
-          <div class="info-grid">
-            <article class="info-card reveal">
-              <div class="info-icon">📅</div>
-              <div class="info-label">DATE · 时间</div>
-              <div class="info-main">2026年 6月 15日</div>
-              <div class="info-sub">星期一<br />18:00 签到入席<br />18:30 宴席开始</div>
-            </article>
+    <div class="topbar" id="topbar">
+      <button class="icon-btn" id="muteBtn" aria-label="静音">🔊</button>
+    </div>
 
-            <article class="info-card reveal">
-              <div class="info-icon">📍</div>
-              <div class="info-label">LOCATION · 地点</div>
-              <div class="info-main">幸福大酒店</div>
-              <div class="info-sub">3楼 · 宴会厅<br />XX市 XX区 XX路88号</div>
-            </article>
+    <section class="choice-wrap" id="choiceWrap">
+      <div class="choice-hint">MAKE A CHOICE</div>
+      <div class="choices" id="choices"></div>
+    </section>
 
-            <article class="info-card reveal">
-              <div class="info-icon">💌</div>
-              <div class="info-label">MESSAGE · 邀请</div>
-              <div class="info-main">甜蜜赴约</div>
-              <div class="info-sub">欢迎亲爱的家人和朋友们<br />一起见证我们的幸福答谢时刻</div>
-            </article>
+    <section class="ending-card" id="endingCard">
+      <small>JUST MARRIED</small>
+      <h2>Maldives</h2>
+      <p>我们的婚礼 · 2026</p>
+      <button class="restart" id="restartBtn">再看一次</button>
+    </section>
 
-            <article class="info-card reveal">
-              <div class="info-icon">🎀</div>
-              <div class="info-label">DRESS CODE · 氛围</div>
-              <div class="info-main">温柔出席</div>
-              <div class="info-sub">无需拘谨，轻松到场即可<br />一起享受这份甜甜的相聚</div>
-            </article>
-          </div>
-        </div>
-      </section>
+    <section class="start" id="startScreen">
+      <div class="start-kicker">WEDDING LIVE</div>
+      <h1>Maldives</h1>
+      <p>你收到了一份来自海边的婚礼邀请</p>
+      <button class="start-btn" id="startBtn">进入婚礼</button>
+    </section>
 
-      <section class="section dress-section" id="poster">
-        <div class="container">
-          <div class="section-tag reveal">Poster Preview</div>
-          <h2 class="section-title reveal">邀请函海报</h2>
-          <p class="section-desc reveal">
-            这张粉色 Lolita 风格邀请函，既可以当网页主视觉，也很适合你截屏、转发朋友圈，整体观感会比普通婚礼页更甜、更梦幻。
-          </p>
+    <div class="transition" id="transition"></div>
+    <div class="rotate-note">请将手机转回竖屏观看</div>
+  </main>
 
-          <div class="poster-layout">
-            <div class="poster-copy reveal">
-              <h3>这版页面更适合微信里看</h3>
-              <p>
-                我已经把页面改成了“首屏更抓眼、下滑更有层次、手机上更完整”的结构。
-                微信里点开后，第一眼会先看到大图和主卡片，继续往下才是安排信息和海报内容，观感会更像一份真正的线上邀请函。
-              </p>
-              <ul class="poster-points">
-                <li>首屏更有“打开就惊艳一下”的感觉</li>
-                <li>导航、卡片、按钮都对手机做了适配</li>
-                <li>整体保留 Lolita 元素，但不会太乱</li>
-              </ul>
-            </div>
+<script>
+/**
+ * Wedding Live Demo
+ * -------------------------------------------------------------
+ * DEMO_MODE = true  : 不依赖视频，用动态占位场景测试交互与切换。
+ * DEMO_MODE = false : 使用下面 story 里的 video 文件。
+ *
+ * 把 MP4 放进 videos/ 后，只需改为 false 即可。
+ */
+const DEMO_MODE = true;
+const DEMO_SCENE_MS = 4200;
+const CEREMONY_SCENE_MS = 5200;
 
-            <div class="gallery-box reveal">
-              <img src="./assets/invitation.png" alt="粉色Lolita风婚礼答谢宴邀请函海报" />
-            </div>
-          </div>
-        </div>
-      </section>
+const story = {
+  intro: {
+    eyebrow: "MALDIVES · DAY 1",
+    title: "今天，有两个人要在这里结婚。",
+    sub: "而你，也收到了邀请。",
+    video: "videos/01_intro.mp4",
+    choices: [
+      { text: "去看看他们", next: "couple" },
+      { text: "先看看这片海", next: "ocean" }
+    ]
+  },
+  couple: {
+    eyebrow: "THE COUPLE",
+    title: "“你终于来了。”",
+    sub: "新人已经在等你，婚礼快开始了。",
+    video: "videos/02A_couple.mp4",
+    choices: [{ text: "去找个位置坐下", next: "seat" }]
+  },
+  ocean: {
+    eyebrow: "THE OCEAN",
+    title: "海风比想象中更近。",
+    sub: "嘉宾从旁边经过：还看呢？人家要结婚了。",
+    video: "videos/02B_ocean.mp4",
+    choices: [{ text: "好吧，去参加婚礼", next: "seat" }]
+  },
+  seat: {
+    eyebrow: "CEREMONY · SOON",
+    title: "你坐进了唯一留空的位置。",
+    sub: "仪式还没开始。你想先看哪里？",
+    video: "videos/03_seat.mp4",
+    choices: [
+      { text: "看看新人", next: "watchCouple" },
+      { text: "再看看周围", next: "view" }
+    ]
+  },
+  watchCouple: {
+    eyebrow: "BEFORE THE CEREMONY",
+    title: "他们看起来都有一点紧张。",
+    sub: "但对视以后，又一起笑了。",
+    video: "videos/04A_couple.mp4",
+    choices: [{ text: "仪式要开始了", next: "ceremony" }]
+  },
+  view: {
+    eyebrow: "ONE MORE LOOK",
+    title: "海浪、花、风，还有今天。",
+    sub: "再看一眼，仪式就要开始了。",
+    video: "videos/04B_view.mp4",
+    choices: [{ text: "回到婚礼", next: "ceremony" }]
+  },
+  ceremony: {
+    eyebrow: "THE CEREMONY",
+    title: "“我愿意。”",
+    sub: "这一段，之后会换成你们真正的婚礼仪式。",
+    video: "videos/05_ceremony.mp4",
+    demoMs: CEREMONY_SCENE_MS,
+    choices: [
+      { text: "去祝福他们", next: "blessing" },
+      { text: "先给他们拍张照片", next: "photo" }
+    ]
+  },
+  blessing: {
+    eyebrow: "AFTER THE CEREMONY",
+    title: "“谢谢你来看我们的婚礼。”",
+    sub: "海边的仪式结束了，但今天还没有结束。",
+    video: "videos/06A_blessing.mp4",
+    choices: [{ text: "一起去海边", next: "ending" }]
+  },
+  photo: {
+    eyebrow: "ONE PHOTO",
+    title: "“偷拍是吧？”",
+    sub: "他们笑着摆好了姿势，然后向你招手。",
+    video: "videos/06B_photo.mp4",
+    choices: [{ text: "走过去", next: "ending" }]
+  },
+  ending: {
+    eyebrow: "JUST MARRIED",
+    title: "谢谢你来参加我们的婚礼。",
+    sub: "Maldives · 2026",
+    video: "videos/07_ending.mp4",
+    ending: true
+  }
+};
 
-      <section class="section" id="rsvp">
-        <div class="container">
-          <div class="cta-box reveal">
-            <div class="section-tag">Warm Reminder</div>
-            <h2 class="cta-title">期待与您相见</h2>
-            <p class="cta-sub">
-              微信里预览时，建议你先把图片文件和页面一起放到 Git 上，
-              然后用手机直接打开链接测试首屏效果、下滑节奏和图片清晰度。
-              如果你想再进一步，我下一步就可以继续帮你补：地图跳转、音乐开关、朋友圈分享文案、GitHub Pages 发布说明。
-            </p>
-            <div class="cta-actions">
-              <a class="btn btn-primary" href="#hero">回到顶部</a>
-              <a class="btn btn-secondary" href="#poster">查看主海报</a>
-            </div>
-            <div class="wechat-tip">建议在微信里多试两次：一次看首屏，一次下滑看整体层次。</div>
-          </div>
-        </div>
-      </section>
-    </main>
+const $ = (s) => document.querySelector(s);
+const video = $("#video");
+const demoScene = $("#demoScene");
+const startScreen = $("#startScreen");
+const startBtn = $("#startBtn");
+const choiceWrap = $("#choiceWrap");
+const choices = $("#choices");
+const transition = $("#transition");
+const sceneCopy = $("#sceneCopy");
+const eyebrow = $("#eyebrow");
+const sceneTitle = $("#sceneTitle");
+const sceneSub = $("#sceneSub");
+const progress = $("#progress");
+const progressFill = $("#progressFill");
+const topbar = $("#topbar");
+const muteBtn = $("#muteBtn");
+const endingCard = $("#endingCard");
+const restartBtn = $("#restartBtn");
 
-    <footer class="footer reveal">
-      <div class="footer-line"></div>
-      <div>冯先生 · 熊女士 ｜ Sweet Lolita Wedding Thank You Party</div>
-    </footer>
-  </div>
+let currentId = null;
+let demoTimer = null;
+let demoStart = 0;
+let raf = null;
+let muted = false;
+let sceneToken = 0;
 
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('show');
-      });
-    }, { threshold: 0.12 });
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+function setCopy(node){
+  eyebrow.textContent = node.eyebrow || "";
+  sceneTitle.textContent = node.title || "";
+  sceneSub.textContent = node.sub || "";
+  sceneCopy.classList.remove("show");
+  requestAnimationFrame(() => requestAnimationFrame(() => sceneCopy.classList.add("show")));
+}
 
-    function createPetal() {
-      const petal = document.createElement('span');
-      petal.className = 'floating-petal';
-      petal.style.left = Math.random() * window.innerWidth + 'px';
-      petal.style.animationDuration = (8 + Math.random() * 8) + 's';
-      petal.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
-      petal.style.opacity = (0.25 + Math.random() * 0.45).toFixed(2);
-      petal.style.transform = 'scale(' + (0.7 + Math.random() * 1.1).toFixed(2) + ')';
-      document.body.appendChild(petal);
-      setTimeout(() => petal.remove(), 17000);
+function setChoices(node){
+  choices.innerHTML = "";
+  (node.choices || []).forEach(c => {
+    const b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = c.text;
+    b.onclick = () => choose(c.next);
+    choices.appendChild(b);
+  });
+}
+
+function showChoices(node){
+  setChoices(node);
+  choiceWrap.classList.add("show");
+  progress.classList.remove("show");
+}
+
+function hideChoices(){
+  choiceWrap.classList.remove("show");
+}
+
+function stopScene(){
+  sceneToken++;
+  clearTimeout(demoTimer);
+  cancelAnimationFrame(raf);
+  video.pause();
+  video.onended = null;
+  video.ontimeupdate = null;
+  video.onerror = null;
+  progressFill.style.width = "0%";
+}
+
+function updateDemoProgress(duration, token){
+  const now = performance.now();
+  const p = Math.min(1, (now - demoStart) / duration);
+  progressFill.style.width = (p * 100).toFixed(1) + "%";
+  if (p < 1 && token === sceneToken) {
+    raf = requestAnimationFrame(() => updateDemoProgress(duration, token));
+  }
+}
+
+async function playNode(id){
+  stopScene();
+  currentId = id;
+  const node = story[id];
+  const token = sceneToken;
+
+  hideChoices();
+  endingCard.classList.remove("show");
+  progress.classList.add("show");
+  setCopy(node);
+
+  if (DEMO_MODE){
+    video.classList.remove("visible");
+    demoScene.classList.remove("hidden");
+    const duration = node.demoMs || DEMO_SCENE_MS;
+    demoStart = performance.now();
+    updateDemoProgress(duration, token);
+    demoTimer = setTimeout(() => {
+      if(token !== sceneToken) return;
+      if(node.ending) showEnding();
+      else showChoices(node);
+    }, duration);
+    return;
+  }
+
+  demoScene.classList.add("hidden");
+  video.src = node.video;
+  video.muted = muted;
+  video.currentTime = 0;
+  video.classList.add("visible");
+
+  video.ontimeupdate = () => {
+    if(video.duration){
+      progressFill.style.width = ((video.currentTime / video.duration) * 100) + "%";
     }
+  };
 
-    setInterval(createPetal, 900);
-  </script>
+  video.onended = () => {
+    if(node.ending) showEnding();
+    else showChoices(node);
+  };
+
+  video.onerror = () => {
+    // 视频缺失时自动回退到 Demo 占位场景，避免整个流程中断。
+    video.classList.remove("visible");
+    demoScene.classList.remove("hidden");
+    const duration = node.demoMs || DEMO_SCENE_MS;
+    demoStart = performance.now();
+    updateDemoProgress(duration, token);
+    demoTimer = setTimeout(() => {
+      if(token !== sceneToken) return;
+      if(node.ending) showEnding();
+      else showChoices(node);
+    }, duration);
+  };
+
+  try{
+    await video.play();
+  }catch(e){
+    // 某些手机浏览器阻止播放时，用户已经点过开始按钮，通常不会进入这里。
+    video.muted = true;
+    muted = true;
+    updateMuteUI();
+    try{ await video.play(); }catch(_){}
+  }
+}
+
+async function choose(nextId){
+  hideChoices();
+  transition.classList.add("on");
+  await sleep(280);
+  await playNode(nextId);
+  await sleep(110);
+  transition.classList.remove("on");
+}
+
+function showEnding(){
+  progress.classList.remove("show");
+  sceneCopy.classList.remove("show");
+  setTimeout(() => endingCard.classList.add("show"), 220);
+}
+
+function updateMuteUI(){
+  muteBtn.textContent = muted ? "🔇" : "🔊";
+  video.muted = muted;
+}
+
+muteBtn.onclick = () => {
+  muted = !muted;
+  updateMuteUI();
+};
+
+startBtn.onclick = async () => {
+  startScreen.classList.add("hide");
+  topbar.classList.add("show");
+  await sleep(220);
+  playNode("intro");
+};
+
+restartBtn.onclick = async () => {
+  transition.classList.add("on");
+  await sleep(280);
+  await playNode("intro");
+  await sleep(110);
+  transition.classList.remove("on");
+};
+
+document.addEventListener("visibilitychange", () => {
+  if(document.hidden && !DEMO_MODE) video.pause();
+  else if(!document.hidden && !DEMO_MODE && currentId && !choiceWrap.classList.contains("show") && !endingCard.classList.contains("show")){
+    video.play().catch(()=>{});
+  }
+});
+</script>
 </body>
 </html>
